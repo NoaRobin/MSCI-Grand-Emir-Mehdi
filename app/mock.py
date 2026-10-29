@@ -21,6 +21,7 @@ def _h(*parts: str) -> int:
 
 class MockClient:
     workers = 4
+    cache_key = "demo"
 
     def __init__(self, latency: float = 0.25):
         self.latency, self.audit = latency, []
@@ -31,6 +32,11 @@ class MockClient:
 
     def close(self) -> None:
         return None
+
+    @staticmethod
+    def check_access() -> dict:
+        return {"issuer": ["MSCI ESG Ratings (démo)", "MSCI Climate Change Metrics (démo)"],
+                "fund": ["MSCI ESG Fund Ratings (démo)"], "v3": True, "errors": []}
 
     # Les « droits » simules dependent du code facteur et de la source.
     @staticmethod

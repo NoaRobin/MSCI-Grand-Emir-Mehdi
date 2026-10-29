@@ -5,10 +5,17 @@ d'import **au format exact de l'équipe** : un classeur avec les deux feuilles
 `Template Import Titres` (94 colonnes) et `Template Import Fonds` (123 colonnes). Les en-têtes,
 leur ordre et leurs styles sont repris du template de [RcoMehdi/MSCI-ESG](https://github.com/RcoMehdi/MSCI-ESG).
 
-1. **Ajouter les ISIN** : déposer un Excel/CSV, ou coller une liste, côté Titres ou Fonds.
-2. **Extraire** : l'application interroge MSCI et montre l'avancement.
-3. **Télécharger l'Excel** : un aperçu montre, pour chaque ISIN et chaque colonne, si la cellule
-   est remplie et par quelle source (survol = valeur, source, date).
+1. **Ajouter les ISIN** : déposer un Excel/CSV, ou coller une liste, côté Titres ou Fonds. La
+   feuille du template se dessine aussitôt à droite : une ligne par ISIN, une case par colonne.
+2. **Extraire** : chaque case s'allume à l'arrivée de sa valeur, dans la couleur de sa source
+   (vert API V4, bleu API V3, ambre historique). Les étapes en cours sont affichées et
+   l'extraction peut être annulée à tout moment.
+3. **Télécharger l'Excel** : survoler une case donne la valeur, sa source et sa date ; les lignes
+   et colonnes restées vides sont expliquées sous la feuille.
+
+Interface sombre, conçue avec le skill *UI/UX Pro Max* (design system « dashboard de données »,
+Fira Sans / Fira Code) ; palette des sources vérifiée pour le daltonisme ; animations coupées si
+le système demande de réduire les mouvements.
 
 ## Démarrer
 
@@ -76,6 +83,15 @@ Optimisations de transport :
   directement en V3 et en historique.
 - Une source secondaire refusée (403) ou en erreur n'interrompt pas l'extraction : elle est
   signalée dans l'interface et dans le diagnostic.
+- Un lot en erreur (réseau, 5xx après reprises) n'arrête plus tout : ses lignes passent en
+  « Erreur MSCI sur ce lot », les autres sont livrées. Un lot refusé en HTTP 400 est coupé en
+  deux jusqu'à isoler l'identifiant fautif. Si plus rien ne passe, l'extraction échoue avec le
+  message MSCI au lieu de livrer un fichier vide.
+- Les réponses sont gardées en mémoire 6 h par compte, source et identifiant : relancer la même
+  liste (ou après un lot en erreur) ne refait que les appels manquants. Désactivable.
+- 8 requêtes simultanées au plus pour tout le processus, quelles que soient les extractions.
+- À la connexion, l'application vérifie ce que le compte peut lire : produits V4 Titres et Fonds,
+  accès V3 (visible dans la fenêtre « Connexion MSCI »).
 
 Règles reprises à l'identique : aucune valeur imputée, un `0` ou `False` MSCI est une valeur,
 `FUND_SHARE_CLASS_ID` reste vide tant que sa correspondance n'est pas validée,
@@ -118,7 +134,7 @@ jamais de secret ni de token.
 Pour modifier une correspondance, éditer `app/data/mapping.json` (l'application refuse de
 démarrer si les colonnes ne correspondent plus exactement au template).
 
-Tests hors connexion : `pip install pytest` puis `python -m pytest`.
+Tests hors connexion (19) : `pip install pytest` puis `python -m pytest`.
 
 ## Documentation de référence
 

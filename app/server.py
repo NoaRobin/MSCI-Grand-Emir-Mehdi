@@ -47,6 +47,8 @@ class State:
         self.demo = os.getenv("MSCI_DEMO", "").lower() in ("1", "true", "oui", "yes")
         self.connected = False
         self.last_error = ""
+        self.access: dict | None = None
+        self.mock = MockClient(latency=0.6)  # une instance : le cache des reponses vaut aussi en demonstration
         cid, secret = os.getenv("MSCI_CLIENT_ID", ""), os.getenv("MSCI_CLIENT_SECRET", "")
         if cid and secret:
             self.client = self._build(cid, secret)
@@ -60,12 +62,21 @@ class State:
     def set_credentials(self, cid: str, secret: str) -> None:
         client = self._build(cid.strip(), secret.strip())
         client.authenticate()
+        access = client.check_access()
         with self.lock:
             self.client, self.connected, self.last_error, self.demo = client, True, "", False
+            self.access = access
+
+    def check(self) -> dict:
+        client = self.active()
+        client.authenticate()
+        self.access = client.check_access()
+        self.connected = not self.demo
+        return self.describe()
 
     def active(self):
         if self.demo:
-            return MockClient()
+            return self.mock
         if self.client is None:
             raise MSCIError("Identifiants MSCI non configurés : ouvrir « Connexion MSCI ».")
         return self.client
@@ -73,6 +84,7 @@ class State:
     def describe(self) -> dict:
         return {"version": __version__, "demo": self.demo, "configured": self.client is not None,
                 "connected": self.connected, "error": self.last_error,
+                "access": self.mock.check_access() if self.demo else self.access,
                 "fund_products": _fund_products()}
 
 
@@ -163,6 +175,14 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/credentials":
                 self.state.set_credentials(data.get("client_id", ""), data.get("client_secret", ""))
                 return self._json(self.state.describe())
+            if path == "/api/check":
+                return self._json(self.state.check())
+            if path.startswith("/api/jobs/") and path.endswith("/cancel"):
+                job = jobs.get(path.split("/")[3])
+                if job is None:
+                    return self._error("Extraction introuvable.", 404)
+                job.cancel.set()
+                return self._json({"id": job.id, "state": job.state})
             if path == "/api/demo":
                 self.state.demo = bool(data.get("enabled"))
                 return self._json(self.state.describe())
@@ -184,6 +204,7 @@ class Handler(BaseHTTPRequestHandler):
         options = Options(use_v3=bool(opts.get("use_v3", True)),
                           use_history=bool(opts.get("use_history", True)),
                           inherit=bool(opts.get("inherit", True)),
+                          use_cache=bool(opts.get("use_cache", True)),
                           fund_products=_fund_products())
         job = jobs.start(rows, options, self.state.active(), self.state.demo)
         self._json({"id": job.id})

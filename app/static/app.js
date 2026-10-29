@@ -1,13 +1,24 @@
 "use strict";
 
-const $ = (id) => document.getElementById(id);
-const ENTITY_LABEL = { issuer: "Titres", fund: "Fonds" };
-const ENTITY_NOUN = { issuer: ["titre", "titres"], fund: ["fonds", "fonds"] };
-const STORE_KEY = "msci-extraction.lists";
-const MAX_DRAWN_ROWS = 1200;
-const ROW_H = 24;
-const COL_H = 34;
+/* =====================================================================
+   Extraction MSCI ESG : interface.
+   La feuille du template est l'élément central : elle se dessine dès la
+   saisie, puis chaque cellule s'allume à l'arrivée de sa valeur, dans la
+   couleur de sa source (V4, V3, historique). L'animation montre la cascade.
+   ===================================================================== */
 
+const $ = (id) => document.getElementById(id);
+const STORE_KEY = "msci-extraction.lists";
+const MAX_ROWS_DRAWN = 1500;
+const ROW_H = 24;
+const COL_H = 40;
+const POLL_MS = 400;
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+const ENTITY = {
+  issuer: { tab: "Titres", sheet: "Template Import Titres", noun: ["titre", "titres"] },
+  fund: { tab: "Fonds", sheet: "Template Import Fonds", noun: ["fonds", "fonds"] },
+};
 const STATE_TEXT = {
   complete: "Toutes les colonnes remplies",
   partial: "Partiellement rempli",
@@ -15,54 +26,58 @@ const STATE_TEXT = {
   no_data_returned: "Aucune donnée retournée par MSCI",
   unresolved_identifier: "ISIN inconnu de MSCI",
   ambiguous_identifier: "Plusieurs fonds MSCI pour cet ISIN",
+  api_error: "Erreur MSCI sur ce lot",
   invalid_isin: "ISIN invalide, non envoyé",
 };
-const STATE_FLAG = {
-  reference_only: "#b87a0a", no_data_returned: "#c0442f", unresolved_identifier: "#c0442f",
-  ambiguous_identifier: "#c0442f", invalid_isin: "#c0442f",
-};
+const BAD_STATES = new Set(["no_data_returned", "unresolved_identifier", "ambiguous_identifier", "api_error", "invalid_isin"]);
+const STEP_TEXT = { v4: "API V4", resolve: "ISIN → MDSUID", v3: "API V3", history: "Historique", excel: "Excel" };
+const STEP_COLOR = { v4: "--src-v4", resolve: "--src-v4", v3: "--src-v3", history: "--src-history", excel: "--primary" };
+const SOURCE_OF = { "4": "API V4", c: "Référentiel MSCI", "3": "API V3", h: "Historique V4", i: "Votre saisie" };
 
-const css = getComputedStyle(document.documentElement);
-const color = (name) => css.getPropertyValue(name).trim();
-const CELL_COLORS = {
-  "4": color("--src-v4"), "c": color("--src-v4"), "3": color("--src-v3"),
-  "h": color("--src-history"), "i": color("--src-input"), ".": color("--cell-empty"),
+const tokens = getComputedStyle(document.documentElement);
+const token = (name) => tokens.getPropertyValue(name).trim();
+const COLORS = {
+  "4": token("--src-v4"), c: token("--src-v4"), "3": token("--src-v3"), h: token("--src-history"),
+  i: token("--src-input"), pending: token("--cell-pending"), empty: token("--cell-empty"),
+  bar: token("--text-3"), barTrack: token("--line-soft"),
 };
-const SOURCE_OF_CODE = { "4": "v4", "c": "coverage", "3": "v3", "h": "history", "i": "input" };
-const SOURCE_TEXT = { v4: "API V4", coverage: "Référentiel MSCI", v3: "API V3", history: "Historique V4", input: "Votre saisie" };
 
 const state = {
   entity: "issuer",
   texts: { issuer: "", fund: "" },
   columns: null,
   status: null,
-  job: null,
-  result: null,
-  view: "issuer",
+  job: null, // { id, sent: {issuer, fund}, status, result, texts }
   cellCache: new Map(),
 };
 
 /* ------------------------------------------------------------------ ISIN */
 function isinProblem(code) {
+  if (!code) return "Cellule vide";
   if (code.length !== 12) return `${code.length} caractères au lieu de 12`;
   if (!/^[A-Z]{2}[A-Z0-9]{9}[0-9]$/.test(code)) return "Format : 2 lettres, 9 caractères, 1 chiffre";
   const digits = code.split("").map((c) => (/[A-Z]/.test(c) ? String(c.charCodeAt(0) - 55) : c)).join("");
   let total = 0;
   for (let i = 0; i < digits.length; i++) {
-    let n = Number(digits[digits.length - 1 - i]) * (i % 2 ? 2 : 1);
+    const n = Number(digits[digits.length - 1 - i]) * (i % 2 ? 2 : 1);
     total += Math.floor(n / 10) + (n % 10);
   }
   return total % 10 === 0 ? null : "Clé de contrôle incorrecte";
 }
 
+function makeRow(isin, clientId, status, line) {
+  const code = String(isin || "").trim().toUpperCase().replace(/\s+/g, "");
+  const clean = (v) => (v && v.trim() ? v.trim() : null);
+  return { ISIN: code, Client_ID: clean(clientId), Security_Status: clean(status), line, problem: isinProblem(code) };
+}
+
 function parseText(text) {
   const rows = [];
   text.split(/\r?\n/).forEach((line, index) => {
-    const raw = line.replace(/\u00a0/g, " ");
+    const raw = line.replace(/ /g, " ");
     if (!raw.trim()) return;
-    let parts = raw.includes("\t") ? raw.split("\t") : raw.split(/[;|]/);
+    const parts = raw.includes("\t") ? raw.split("\t") : raw.split(/[;|]/);
     if (parts.length === 1) {
-      // Plusieurs ISIN sur une ligne (copie d'une ligne Excel ou d'un e-mail)
       const tokens = raw.trim().split(/[\s,]+/).filter(Boolean);
       if (tokens.length > 1 && tokens.every((t) => t.length >= 10)) {
         tokens.forEach((t) => rows.push(makeRow(t, null, null, index + 1)));
@@ -74,122 +89,256 @@ function parseText(text) {
   return rows;
 }
 
-function makeRow(isin, clientId, status, line) {
-  const code = String(isin || "").trim().toUpperCase().replace(/\s+/g, "");
-  return {
-    ISIN: code,
-    Client_ID: clientId && clientId.trim() ? clientId.trim() : null,
-    Security_Status: status && status.trim() ? status.trim() : null,
-    line,
-    problem: isinProblem(code),
+const rowToLine = (r) => {
+  const extra = [r.Client_ID, r.Security_Status];
+  while (extra.length && !extra[extra.length - 1]) extra.pop();
+  return [r.ISIN, ...extra.map((v) => v || "")].join("\t");
+};
+
+/* ------------------------------------------------------------------ utilitaires DOM */
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k === "style") node.setAttribute("style", v);
+    else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v);
+  }
+  for (const child of children) if (child != null) node.append(child);
+  return node;
+}
+const fmt = (n) => Number(n).toLocaleString("fr-FR");
+const lowerFirst = (t) => (/^[A-Z]{2}/.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1));
+const plural = (n, [one, many]) => `${fmt(n)} ${n > 1 ? many : one}`;
+
+async function api(url, body) {
+  const options = body === undefined ? {} : {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
   };
+  const response = await fetch(url, options);
+  let data = {};
+  try { data = await response.json(); } catch (e) { /* réponse vide */ }
+  if (!response.ok) throw new Error(data.error || `Erreur ${response.status}`);
+  return data;
 }
 
-/* ------------------------------------------------------------------ saisie */
+/* =====================================================================
+   Feuille (canvas) : cellules + barres de remplissage par colonne
+   ===================================================================== */
+const sheet = {
+  rows: [], cells: [], previous: [], anims: new Map(), mode: "preview",
+  bars: [], barTargets: [], cw: 6, raf: 0,
+
+  setColumns(columns) { this.columns = columns; },
+
+  /** rows: [{isin, name, flag}], cells: [string], mode: preview | live | result */
+  render(rows, cells, mode) {
+    const sameRows = rows.length === this.rows.length && rows.every((r, i) => r.isin === this.rows[i].isin);
+    if (!sameRows || mode === "preview") { this.anims.clear(); this.previous = []; }
+    this.rows = rows.slice(0, MAX_ROWS_DRAWN);
+    this.mode = mode;
+    const n = this.columns.length;
+    const now = performance.now();
+    this.cells = this.rows.map((_, y) => cells[y] || ".".repeat(n));
+    // Nouvelles valeurs : animation décalée de gauche à droite puis de haut en bas.
+    if (mode !== "preview" && !REDUCED.matches) {
+      this.cells.forEach((line, y) => {
+        const before = this.previous[y] || "";
+        for (let x = 0; x < n; x++) {
+          if (line[x] !== "." && line[x] !== before[x]) {
+            this.anims.set(y * n + x, now + x * 4 + Math.min(y, 60) * 10);
+          }
+        }
+      });
+    }
+    this.previous = this.cells.slice();
+    this.barTargets = this.columns.map((_, x) => {
+      const filled = this.cells.reduce((sum, line) => sum + (line[x] !== "." ? 1 : 0), 0);
+      return this.cells.length ? filled / this.cells.length : 0;
+    });
+    if (!sameRows || this.bars.length !== n) this.bars = this.barTargets.map((t) => (mode === "preview" ? t : 0));
+    this.renderLabels(!sameRows);
+    this.layout();
+    this.kick();
+  },
+
+  renderLabels(rebuild) {
+    const box = $("sheet-labels");
+    if (rebuild) {
+      box.textContent = "";
+      box.append(el("div", { class: "head" }, "ISIN · émetteur MSCI"));
+      const frag = document.createDocumentFragment();
+      this.rows.forEach(() => frag.append(el("div", { class: "row" },
+        el("span", { class: "flag" }), el("span", { class: "code" }), el("span", { class: "name" }))));
+      box.append(frag);
+    }
+    const nodes = box.querySelectorAll(".row");
+    this.rows.forEach((r, i) => {
+      const node = nodes[i];
+      node.className = `row ${r.flag || ""}`;
+      node.title = r.title || "";
+      node.querySelector(".code").textContent = r.isin || "(vide)";
+      node.querySelector(".name").textContent = r.name || "";
+    });
+  },
+
+  layout() {
+    const holder = $("sheet-cells");
+    const n = this.columns.length;
+    const available = Math.max(240, holder.clientWidth - 20);
+    this.cw = Math.max(4, Math.min(18, available / n));
+    const width = Math.ceil(this.cw * n);
+    const dpr = window.devicePixelRatio || 1;
+    for (const [canvas, h] of [[$("col-canvas"), COL_H], [$("cell-canvas"), this.rows.length * ROW_H]]) {
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.max(1, Math.round(h * dpr));
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${h}px`;
+      canvas.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  },
+
+  kick() { if (!this.raf) this.raf = requestAnimationFrame((t) => this.frame(t)); },
+
+  frame(now) {
+    this.raf = 0;
+    const busy = this.drawCells(now) | this.drawBars();
+    if (busy) this.kick();
+  },
+
+  drawCells(now) {
+    const ctx = $("cell-canvas").getContext("2d");
+    const n = this.columns.length;
+    const cw = this.cw;
+    const gap = cw > 6 ? 2 : 1.5;
+    const idle = this.mode === "result" ? COLORS.empty : COLORS.pending;
+    let animating = false;
+    ctx.clearRect(0, 0, cw * n + 2, this.rows.length * ROW_H);
+    this.cells.forEach((line, y) => {
+      const top = y * ROW_H + 5;
+      const h = ROW_H - 10;
+      for (let x = 0; x < n; x++) {
+        const code = line[x];
+        ctx.fillStyle = idle;
+        ctx.fillRect(x * cw, top, cw - gap, h);
+        if (code === "." || !code) continue;
+        const start = this.anims.get(y * n + x);
+        let p = 1;
+        if (start !== undefined) {
+          p = Math.min(1, Math.max(0, (now - start) / 300));
+          if (p >= 1) this.anims.delete(y * n + x); else animating = true;
+        }
+        const e = 1 - Math.pow(1 - p, 3);
+        if (e <= 0) continue;
+        const hh = h * (0.35 + 0.65 * e);
+        ctx.globalAlpha = e;
+        ctx.fillStyle = COLORS[code] || COLORS.i;
+        ctx.fillRect(x * cw, top + (h - hh) / 2, cw - gap, hh);
+        ctx.globalAlpha = 1;
+      }
+    });
+    return animating;
+  },
+
+  drawBars() {
+    const ctx = $("col-canvas").getContext("2d");
+    const n = this.columns.length;
+    const cw = this.cw;
+    const gap = cw > 6 ? 2 : 1.5;
+    const track = COL_H - 14;
+    let moving = false;
+    ctx.clearRect(0, 0, cw * n + 2, COL_H);
+    for (let x = 0; x < n; x++) {
+      const target = this.barTargets[x] || 0;
+      let v = this.bars[x] || 0;
+      if (REDUCED.matches) v = target;
+      else if (Math.abs(target - v) > 0.002) { v += (target - v) * 0.18; moving = true; } else v = target;
+      this.bars[x] = v;
+      ctx.fillStyle = COLORS.barTrack;
+      ctx.fillRect(x * cw, 6, cw - gap, track);
+      if (v > 0) {
+        ctx.fillStyle = COLORS.bar;
+        const h = Math.max(1, track * v);
+        ctx.fillRect(x * cw, 6 + track - h, cw - gap, h);
+      }
+    }
+    return moving;
+  },
+
+  hit(event, canvas) {
+    const x = Math.floor(event.offsetX / this.cw);
+    const y = canvas === "cells" ? Math.floor(event.offsetY / ROW_H) : 0;
+    if (x < 0 || x >= this.columns.length || y < 0 || (canvas === "cells" && y >= this.rows.length)) return null;
+    return { x, y };
+  },
+};
+
+/* =====================================================================
+   Saisie
+   ===================================================================== */
 function saveLists() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(state.texts)); } catch (e) { /* stockage indisponible */ }
 }
 function loadLists() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
-    state.texts.issuer = saved.issuer || "";
-    state.texts.fund = saved.fund || "";
+    state.texts.issuer = typeof saved.issuer === "string" ? saved.issuer : "";
+    state.texts.fund = typeof saved.fund === "string" ? saved.fund : "";
   } catch (e) { /* stockage indisponible */ }
 }
 
 function selectEntity(entity) {
   state.entity = entity;
-  document.querySelectorAll(".input [role=tab]").forEach((tab) => {
+  document.querySelectorAll(".seg [role=tab]").forEach((tab) => {
     const on = tab.dataset.entity === entity;
-    tab.setAttribute("aria-selected", on);
+    tab.setAttribute("aria-selected", String(on));
     tab.tabIndex = on ? 0 : -1;
   });
-  $("panel-list").setAttribute("aria-labelledby", `tab-${entity}`);
+  document.querySelector(".seg").dataset.active = entity;
   $("isins").value = state.texts[entity];
-  refreshCheck();
-}
-
-function refreshCheck() {
-  const counts = {};
-  for (const entity of ["issuer", "fund"]) {
-    const rows = parseText(state.texts[entity]);
-    counts[entity] = rows;
-    document.querySelector(`[data-count=${entity}]`).textContent = rows.length;
-  }
-  const rows = counts[state.entity];
-  const bad = rows.filter((r) => r.problem);
-  const unique = new Set(rows.map((r) => r.ISIN)).size;
-  const box = $("check");
-  box.innerHTML = "";
-  if (rows.length) {
-    const line = document.createElement("div");
-    line.className = "ok";
-    const dup = rows.length - unique;
-    line.textContent = `${rows.length} ISIN` +
-      (dup ? ` · ${dup} doublon${dup > 1 ? "s" : ""} (conservés dans l'export)` : "") +
-      (bad.length ? ` · ${bad.length} à corriger` : " · tous valides");
-    box.append(line);
-  }
-  if (bad.length) {
-    const list = document.createElement("ul");
-    bad.slice(0, 50).forEach((r) => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span><b></b> · ligne ${r.line}</span><span></span>`;
-      li.querySelector("b").textContent = r.ISIN || "(vide)";
-      li.lastChild.textContent = r.problem;
-      list.append(li);
-    });
-    box.append(list);
-  }
-  if (rows.length) {
-    const actions = document.createElement("div");
-    actions.className = "row-actions";
-    if (bad.length) actions.append(linkButton("Retirer les ISIN invalides", () => {
-      setText(rows.filter((r) => !r.problem).map(rowToLine).join("\n"));
-    }));
-    if (rows.length !== unique) actions.append(linkButton("Retirer les doublons", () => {
-      const seen = new Set();
-      setText(rows.filter((r) => !seen.has(r.ISIN) && seen.add(r.ISIN)).map(rowToLine).join("\n"));
-    }));
-    actions.append(linkButton(`Vider la liste ${ENTITY_LABEL[state.entity]}`, () => setText("")));
-    box.append(actions);
-  }
-  const total = counts.issuer.length + counts.fund.length;
-  const running = state.job && !state.result && !$("progress").hidden;
-  $("run").disabled = total === 0 || running || !canRun();
-  $("run-note").textContent = !canRun()
-    ? "Connectez-vous à MSCI (en haut à droite) pour lancer l'extraction."
-    : total ? `${counts.issuer.length} titres · ${counts.fund.length} fonds` : "";
-}
-
-function canRun() {
-  return state.status && (state.status.demo || state.status.configured);
-}
-
-function rowToLine(r) {
-  const extra = [r.Client_ID, r.Security_Status];
-  while (extra.length && !extra[extra.length - 1]) extra.pop();
-  return [r.ISIN, ...extra.map((v) => v || "")].join("\t");
+  state.cellCache.clear();
+  refresh();
 }
 
 function setText(text) {
   state.texts[state.entity] = text;
   $("isins").value = text;
   saveLists();
-  refreshCheck();
+  refresh();
 }
 
-function linkButton(label, onClick) {
-  const b = document.createElement("button");
-  b.type = "button"; b.className = "link"; b.textContent = label;
-  b.addEventListener("click", onClick);
-  return b;
+function renderCheck(rows) {
+  const box = $("check");
+  box.textContent = "";
+  if (!rows.length) return;
+  const bad = rows.filter((r) => r.problem);
+  const unique = new Set(rows.map((r) => r.ISIN)).size;
+  const dup = rows.length - unique;
+  const summary = el("div", { class: "summary" },
+    el("span", { class: bad.length ? "" : "ok" }, `${plural(rows.length, ["ISIN", "ISIN"])}${bad.length ? "" : " valides"}`));
+  if (dup) summary.append(el("span", {}, `${plural(dup, ["doublon", "doublons"])} conservés`));
+  if (bad.length) summary.append(el("span", {}, `${fmt(bad.length)} à corriger`));
+  box.append(summary);
+  if (bad.length) {
+    const list = el("ul");
+    bad.slice(0, 50).forEach((r) => list.append(el("li", {},
+      el("span", {}, el("b", {}, r.ISIN || "(vide)"), ` · ligne ${r.line}`), el("span", {}, r.problem))));
+    box.append(list);
+  }
+  const actions = el("div", { class: "row-actions" });
+  if (bad.length) actions.append(el("button", { type: "button", class: "link", onclick: () =>
+    setText(rows.filter((r) => !r.problem).map(rowToLine).join("\n")) }, "Retirer les invalides"));
+  if (dup) actions.append(el("button", { type: "button", class: "link", onclick: () => {
+    const seen = new Set();
+    setText(rows.filter((r) => !seen.has(r.ISIN) && seen.add(r.ISIN)).map(rowToLine).join("\n"));
+  } }, "Retirer les doublons"));
+  actions.append(el("button", { type: "button", class: "link", onclick: () => setText("") },
+    `Vider la liste ${ENTITY[state.entity].tab}`));
+  box.append(actions);
 }
 
 async function uploadFile(file) {
-  const drop = $("drop");
-  drop.classList.remove("over");
-  const note = $("check");
+  $("drop").classList.remove("over");
   try {
     const response = await fetch("/api/parse", {
       method: "POST", body: file,
@@ -197,327 +346,294 @@ async function uploadFile(file) {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Lecture impossible");
-    const added = { issuer: 0, fund: 0 };
     const target = { issuer: data.issuer, fund: data.fund };
     target[state.entity] = target[state.entity].concat(data.auto);
+    const added = { issuer: 0, fund: 0 };
     for (const entity of ["issuer", "fund"]) {
       if (!target[entity].length) continue;
-      const lines = target[entity].map((r) => rowToLine(r));
       const current = state.texts[entity].trim();
-      state.texts[entity] = (current ? current + "\n" : "") + lines.join("\n");
-      added[entity] = lines.length;
+      state.texts[entity] = (current ? `${current}\n` : "") + target[entity].map(rowToLine).join("\n");
+      added[entity] = target[entity].length;
     }
     saveLists();
-    if (!added[state.entity] && added[state.entity === "issuer" ? "fund" : "issuer"]) {
-      selectEntity(state.entity === "issuer" ? "fund" : "issuer");
+    const other = state.entity === "issuer" ? "fund" : "issuer";
+    selectEntity(!added[state.entity] && added[other] ? other : state.entity);
+    $("check").prepend(el("div", { class: "flash" },
+      `${file.name} : ${plural(added.issuer, ENTITY.issuer.noun)} et ${plural(added.fund, ENTITY.fund.noun)} ajoutés.`));
+  } catch (error) {
+    $("check").prepend(el("ul", {}, el("li", {}, `${file.name} : ${error.message}`)));
+  }
+}
+
+/* =====================================================================
+   Rendu global
+   ===================================================================== */
+function running() { return state.job && state.job.status && state.job.status.state === "running"; }
+function stale() {
+  return state.job && state.job.result && (state.job.texts.issuer !== state.texts.issuer || state.job.texts.fund !== state.texts.fund);
+}
+
+function refresh() {
+  const lists = { issuer: parseText(state.texts.issuer), fund: parseText(state.texts.fund) };
+  for (const entity of ["issuer", "fund"]) document.querySelector(`[data-count=${entity}]`).textContent = lists[entity].length;
+  renderCheck(lists[state.entity]);
+  renderRunButton(lists);
+  renderSheet(lists);
+}
+
+function canRun() { return state.status && (state.status.demo || state.status.configured); }
+
+function renderRunButton(lists) {
+  const button = $("run");
+  const total = lists.issuer.length + lists.fund.length;
+  if (running()) {
+    button.disabled = false;
+    button.className = "btn ghost-btn";
+    button.textContent = "Annuler l'extraction";
+    $("run-note").textContent = "Les requêtes en cours se terminent, puis tout s'arrête.";
+    return;
+  }
+  const done = state.job && state.job.result && !stale();
+  button.className = done ? "btn ghost-btn" : "btn primary";
+  button.textContent = done ? "Relancer l'extraction" : "Extraire les données";
+  button.disabled = total === 0 || !canRun();
+  $("run-note").textContent = !canRun()
+    ? "Connectez-vous à MSCI (en haut à droite) pour lancer l'extraction."
+    : total ? `${plural(lists.issuer.length, ENTITY.issuer.noun)} · ${plural(lists.fund.length, ENTITY.fund.noun)}` : "";
+}
+
+function renderSheet(lists) {
+  if (!state.columns) return;
+  const entity = state.entity;
+  const columns = state.columns[entity];
+  sheet.setColumns(columns);
+  $("sheet-title").textContent = ENTITY[entity].sheet;
+  const job = state.job;
+  const status = job && job.status;
+  let rows, cells, mode;
+
+  if (job && !stale() && (running() || job.result) && job.sent[entity] && job.sent[entity].length) {
+    if (job.result && job.result.entities[entity]) {
+      const table = job.result.entities[entity].table;
+      rows = table.map((r) => ({
+        isin: r.isin, name: r.name || (BAD_STATES.has(r.state) ? STATE_TEXT[r.state] : ""),
+        flag: r.state === "invalid_isin" ? "bad invalid" : BAD_STATES.has(r.state) ? "bad" : r.state === "reference_only" ? "warn" : "",
+        title: STATE_TEXT[r.state] + (r.problem ? ` : ${r.problem}` : ""),
+      }));
+      cells = table.map((r) => r.cells);
+      mode = "result";
     } else {
-      selectEntity(state.entity);
+      rows = job.sent[entity].map((r) => ({ isin: r.ISIN, flag: r.problem ? "bad invalid" : "", title: r.problem || "" }));
+      cells = (status.live && status.live[entity]) || [];
+      mode = "live";
     }
-    flash(`${file.name} : ${added.issuer} titres, ${added.fund} fonds ajoutés.`);
-  } catch (error) {
-    note.insertAdjacentHTML("afterbegin", '<ul><li></li></ul>');
-    note.querySelector("li").textContent = `${file.name} : ${error.message}`;
+  } else {
+    rows = lists[entity].map((r) => ({ isin: r.ISIN, flag: r.problem ? "bad invalid" : "", title: r.problem || "", name: r.problem ? r.problem : "" }));
+    cells = [];
+    mode = "preview";
   }
-}
 
-function flash(text) {
-  const box = $("check");
-  const p = document.createElement("div");
-  p.textContent = text;
-  box.prepend(p);
-}
+  const has = rows.length > 0;
+  $("sheet-empty").hidden = has;
+  $("sheet").hidden = !has;
+  $("sheet-foot").hidden = !has || mode === "preview";
+  if (has) sheet.render(rows, cells, mode);
 
-/* ------------------------------------------------------------------ connexion */
-async function loadStatus() {
-  try {
-    const response = await fetch("/api/status");
-    state.status = await response.json();
-  } catch (e) {
-    state.status = { configured: false, demo: false, error: "Serveur local injoignable" };
-  }
-  renderStatus();
-}
-
-function renderStatus() {
-  const s = state.status;
-  const conn = $("conn");
-  if (s.demo) { conn.dataset.state = "demo"; $("conn-label").textContent = "Démonstration"; }
-  else if (s.configured) { conn.dataset.state = "ok"; $("conn-label").textContent = s.connected ? "Connecté à MSCI" : "Identifiants MSCI chargés"; }
-  else { conn.dataset.state = "off"; $("conn-label").textContent = "Se connecter à MSCI"; }
-  $("demo-banner").hidden = !s.demo;
-  refreshCheck();
-}
-
-async function postJSON(url, body) {
-  const response = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || `Erreur ${response.status}`);
-  return data;
-}
-
-/* ------------------------------------------------------------------ extraction */
-async function run() {
-  const rows = { issuer: parseText(state.texts.issuer), fund: parseText(state.texts.fund) };
-  const payload = {
-    issuer: rows.issuer.map(({ ISIN, Client_ID, Security_Status }) => ({ ISIN, Client_ID, Security_Status })),
-    fund: rows.fund.map(({ ISIN, Client_ID, Security_Status }) => ({ ISIN, Client_ID, Security_Status })),
-    options: { use_v3: $("opt-v3").checked, use_history: $("opt-history").checked, inherit: $("opt-inherit").checked },
-  };
-  state.result = null;
-  state.cellCache.clear();
-  show("progress");
-  $("stage").textContent = "Connexion à MSCI";
-  setProgress(0.02);
-  $("run").disabled = true;
-  if (window.matchMedia("(max-width: 900px)").matches) $("progress").scrollIntoView({ behavior: "smooth", block: "start" });
-  try {
-    const { id } = await postJSON("/api/run", payload);
-    state.job = id;
-    poll();
-  } catch (error) {
-    fail(error.message);
-  }
-}
-
-async function poll() {
-  try {
-    const response = await fetch(`/api/jobs/${state.job}`);
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    if (data.state === "running") {
-      $("stage").textContent = data.stage;
-      setProgress(data.fraction);
-      setTimeout(poll, 500);
-      return;
-    }
-    if (data.state === "failed") return fail(data.error);
-    state.result = data.result;
-    renderResult();
-  } catch (error) {
-    fail(error.message);
-  }
-}
-
-function setProgress(fraction) {
-  $("fill").style.width = `${Math.round(fraction * 100)}%`;
-  $("track").setAttribute("aria-valuenow", Math.round(fraction * 100));
-}
-
-function show(which) {
-  for (const id of ["empty", "progress", "result"]) $(id).hidden = id !== which;
-  $("failure").hidden = true;
-}
-
-function fail(message) {
-  show("empty");
-  const box = $("failure");
-  box.hidden = false;
-  box.innerHTML = "<strong>L'extraction n'a pas abouti.</strong><span></span>";
-  box.querySelector("span").textContent = message;
-  refreshCheck();
-}
-
-/* ------------------------------------------------------------------ résultat */
-function renderResult() {
-  const result = state.result;
-  show("result");
-  const entities = Object.keys(result.entities);
-  state.view = entities.includes(state.view) ? state.view : entities[0];
-  const parts = entities.map((e) => {
-    const n = result.entities[e].rows;
-    return `${n} ${ENTITY_NOUN[e][n > 1 ? 1 : 0]}`;
-  });
-  $("result-title").textContent = result.demo ? "Fichier de démonstration prêt" : "Fichier prêt";
-  $("result-sub").textContent = `${parts.join(" et ")} · ${String(result.duration).replace(".", ",")} s`;
-  $("download").href = `/api/jobs/${state.job}/excel`;
-  $("report").href = `/api/jobs/${state.job}/report`;
-
-  const tabs = $("result-tabs");
-  tabs.innerHTML = "";
-  tabs.hidden = entities.length < 2;
-  entities.forEach((e) => {
-    const b = document.createElement("button");
-    b.setAttribute("role", "tab");
-    b.setAttribute("aria-selected", e === state.view);
-    b.textContent = `Template ${ENTITY_LABEL[e]}`;
-    b.addEventListener("click", () => { state.view = e; renderResult(); });
-    tabs.append(b);
-  });
-  renderView();
-  refreshCheck();
-}
-
-function renderView() {
-  const result = state.result;
-  const data = result.entities[state.view];
-  const columns = state.columns[state.view];
-  const by = data.cells_by_source;
-  const msciFilled = (by["4"] || 0) + (by["c"] || 0) + (by["3"] || 0) + (by["h"] || 0);
-  const rate = data.msci_cells ? Math.round((100 * msciFilled) / data.msci_cells) : 0;
-  const fmt = (n) => n.toLocaleString("fr-FR");
-  const pieces = [`${fmt((by["4"] || 0) + (by["c"] || 0))} par l'API V4`];
-  if (by["3"]) pieces.push(`${fmt(by["3"])} par la V3`);
-  if (by["h"]) pieces.push(`${fmt(by["h"])} par l'historique`);
-  $("fill-line").innerHTML = `<strong>${rate} %</strong> des cellules MSCI sont remplies (${fmt(msciFilled)} sur ${fmt(data.msci_cells)}) : <span></span>.`;
-  $("fill-line").querySelector("span").textContent = pieces.join(", ");
-
-  const legend = [["4", "API V4"], ["3", "API V3"], ["h", "Historique"], ["i", "Saisie"], [".", "Vide"]];
-  $("legend").innerHTML = "";
-  legend.forEach(([code, label]) => {
-    const li = document.createElement("li");
-    li.innerHTML = `<i style="background:${CELL_COLORS[code]}"></i>`;
-    li.append(label);
-    $("legend").append(li);
-  });
-
-  drawSheet(data, columns);
-  renderNotes(data);
-}
-
-function drawSheet(data, columns) {
-  const rows = data.table.slice(0, MAX_DRAWN_ROWS);
-  const labels = $("sheet-labels");
-  labels.innerHTML = '<div class="head">ISIN · nom MSCI</div>';
-  const frag = document.createDocumentFragment();
-  rows.forEach((r) => {
-    const div = document.createElement("div");
-    div.className = "row";
-    div.title = STATE_TEXT[r.state] + (r.problem ? ` (${r.problem})` : "");
-    const flag = STATE_FLAG[r.state];
-    div.innerHTML = `<span class="flag" style="background:${flag || "transparent"}"></span><span class="code"></span><span class="name"></span>`;
-    div.querySelector(".code").textContent = r.isin || "(vide)";
-    div.querySelector(".name").textContent = r.name || STATE_TEXT[r.state];
-    frag.append(div);
-  });
-  labels.append(frag);
-  $("sheet-note").textContent = data.table.length > MAX_DRAWN_ROWS
-    ? `Aperçu limité aux ${MAX_DRAWN_ROWS} premières lignes ; l'Excel contient les ${data.table.length}.` : "";
-
-  const holder = document.querySelector(".sheet-cells");
-  const available = Math.max(200, holder.clientWidth - 16);
+  // Sous-titre
   const n = columns.length;
-  const cw = Math.max(4, Math.min(18, available / n));
-  const width = Math.ceil(cw * n);
-  const dpr = window.devicePixelRatio || 1;
-  const geometry = { cw, n, rows, columns, data };
-  state.geometry = geometry;
+  if (mode === "preview") {
+    $("sheet-sub").textContent = has
+      ? `${plural(rows.length, ["ligne", "lignes"])} × ${n} colonnes : prêtes à être remplies.`
+      : "La feuille se dessine dès qu'un ISIN est saisi.";
+  } else if (mode === "live") {
+    $("sheet-sub").textContent = status.stage;
+  } else {
+    const data = job.result.entities[entity];
+    $("sheet-sub").textContent = `${plural(data.rows, ["ligne", "lignes"])} × ${n} colonnes · ${String(job.result.duration).replace(".", ",")} s`;
+  }
+  if (mode !== "preview") renderFoot(cells, columns, mode);
+  renderSteps(mode);
+  renderDeliver();
+  renderNotes(mode === "result" ? job.result.entities[entity] : null);
+}
 
-  const colCanvas = $("col-canvas");
-  sizeCanvas(colCanvas, width, COL_H, dpr);
-  const cctx = colCanvas.getContext("2d");
-  cctx.scale(dpr, dpr);
-  const total = Math.max(1, data.rows);
-  data.column_fill.forEach((filled, i) => {
-    const h = Math.round((filled / total) * (COL_H - 10));
-    cctx.fillStyle = color("--cell-empty");
-    roundRect(cctx, i * cw, 4, cw - 1.5, COL_H - 10, 1);
-    if (h > 0) {
-      cctx.fillStyle = color("--ink-3");
-      roundRect(cctx, i * cw, COL_H - 6 - h, cw - 1.5, h, 1);
+function renderFoot(cells, columns, mode) {
+  const counts = { "4": 0, "3": 0, h: 0, i: 0 };
+  const msciIdx = columns.map((c, i) => (c.kind === "msci" ? i : -1)).filter((i) => i >= 0);
+  let msciFilled = 0;
+  cells.forEach((line) => {
+    for (let x = 0; x < line.length; x++) {
+      const code = line[x] === "c" ? "4" : line[x];
+      if (code in counts) counts[code]++;
     }
+    msciIdx.forEach((i) => { if (line[i] && line[i] !== "." && line[i] !== "i") msciFilled++; });
   });
+  const total = msciIdx.length * cells.length;
+  const legend = $("legend");
+  legend.textContent = "";
+  [["4", "API V4"], ["3", "API V3"], ["h", "Historique"], ["i", "Saisie"]].forEach(([code, label]) => {
+    legend.append(el("li", {}, el("i", { style: `background:${COLORS[code]}` }), label, el("span", { class: "n" }, fmt(counts[code]))));
+  });
+  legend.append(el("li", {}, el("i", { style: `background:${mode === "result" ? COLORS.empty : COLORS.pending}` }),
+    mode === "result" ? "Vide" : "En attente"));
+  const rate = total ? Math.round((100 * msciFilled) / total) : 0;
+  const line = $("fill-line");
+  line.textContent = "";
+  line.append(el("strong", {}, `${rate}\u202f%`), ` des cellules MSCI remplies (${fmt(msciFilled)} / ${fmt(total)})`);
+}
 
-  const cellCanvas = $("cell-canvas");
-  sizeCanvas(cellCanvas, width, rows.length * ROW_H, dpr);
-  const ctx = cellCanvas.getContext("2d");
-  ctx.scale(dpr, dpr);
-  rows.forEach((r, y) => {
-    for (let x = 0; x < n; x++) {
-      ctx.fillStyle = CELL_COLORS[r.cells[x]] || CELL_COLORS["."];
-      ctx.fillRect(x * cw, y * ROW_H + 5, cw - 1.5, ROW_H - 10);
+function renderSteps(mode) {
+  const list = $("steps");
+  const job = state.job;
+  if (mode === "preview" || !job || !job.status || !job.status.plan[state.entity]) { list.hidden = true; return; }
+  const status = job.status;
+  const plan = status.plan[state.entity];
+  const done = new Set(status.done[state.entity] || []);
+  const finished = status.state === "done";
+  list.hidden = false;
+  list.textContent = "";
+  const sources = (job.result && job.result.sources[state.entity]) || {};
+  plan.forEach((step) => {
+    let s = "pending";
+    if (finished || done.has(step)) s = "done";
+    else if (status.entity === state.entity && status.step === step) s = "active";
+    if (finished && (step === "v3" || step === "history") && !sources[step]) s = "skipped";
+    if (finished && step === "resolve" && !sources.v4) s = "skipped";
+    if (sources[step] && sources[step].state === "refused") s = "refused";
+    const item = el("li", { "data-state": s, style: `--step-color: var(${STEP_COLOR[step]})` },
+      el("span", { class: "pip" }), STEP_TEXT[step]);
+    if (s === "active") item.setAttribute("aria-current", "step");
+    if (s === "skipped") item.title = "Rien à compléter pour cette source";
+    if (s === "refused") item.title = "Accès refusé par MSCI pour cette source";
+    list.append(item);
+  });
+}
+
+function renderDeliver() {
+  const job = state.job;
+  const box = $("deliver");
+  if (!job || !job.result) { box.hidden = true; return; }
+  const parts = Object.entries(job.result.entities).map(([e, d]) => plural(d.rows, ENTITY[e].noun));
+  $("deliver-title").textContent = stale()
+    ? "La liste a changé depuis cette extraction"
+    : job.result.demo ? "Fichier de démonstration prêt" : "Fichier prêt";
+  $("deliver-sub").textContent = stale()
+    ? "Le fichier ci-contre correspond à l'ancienne liste. Relancez pour le mettre à jour."
+    : `${parts.join(" et ")} · feuilles « Template Import Titres » et « Template Import Fonds »`;
+  $("download").href = `/api/jobs/${job.id}/excel`;
+  $("report").href = `/api/jobs/${job.id}/report`;
+  $("download").className = stale() ? "btn ghost-btn" : "btn primary";
+  box.hidden = false;
+}
+
+function renderNotes(data) {
+  const notes = $("notes");
+  notes.textContent = "";
+  if (!data) return;
+  const note = (kind, title, text) => {
+    const n = el("div", { class: `note ${kind}` }, el("h3", {}, title), el("p", {}, text));
+    notes.append(n);
+    return n;
+  };
+  const details = (summary, items) => {
+    const list = el("ul", { class: "cols" });
+    items.forEach(([code, text]) => list.append(el("li", {}, el("code", {}, code), el("span", {}, ` · ${text}`))));
+    return el("details", {}, el("summary", {}, summary), list);
+  };
+  const sources = state.job.result.sources[state.entity] || {};
+  const nameOf = { v4: "L'API V4", v3: "L'API V3", history: "L'historique V4" };
+  for (const [source, info] of Object.entries(sources)) {
+    if (info.state === "refused") {
+      note("warn", `${nameOf[source]} a refusé l'accès`, `${String(info.detail || "Accès refusé").replace(/\.?$/, ".")} Les autres sources ont été utilisées.`);
+    } else if (info.state === "partial") {
+      note("bad", `${nameOf[source]} : ${plural(info.errors, ["lot", "lots"])} en erreur`, `${String(info.detail).replace(/\.?$/, ".")} Les lignes concernées sont signalées ; relancez pour réessayer (les lots réussis viennent du cache).`);
     }
-  });
+  }
+  const attention = Object.entries(data.states).filter(([s]) => BAD_STATES.has(s) || s === "reference_only");
+  if (attention.length) {
+    const text = attention.map(([s, n]) => `${fmt(n)} × ${lowerFirst(STATE_TEXT[s])}`).join(" ; ");
+    const rows = data.table.filter((r) => BAD_STATES.has(r.state) || r.state === "reference_only").slice(0, 300);
+    note("warn", "Lignes à vérifier", `${text}. Elles restent dans l'Excel, à leur place.`)
+      .append(details("Voir les ISIN", rows.map((r) => [r.isin || "(vide)", lowerFirst(STATE_TEXT[r.state]) + (r.problem ? ` (${r.problem})` : "")])));
+  }
+  if (data.empty_columns.length) {
+    const refused = data.empty_columns.filter((c) => c.reason.startsWith("Non autorisé")).length;
+    note("", `${plural(data.empty_columns.length, ["colonne MSCI vide", "colonnes MSCI vides"])} sur toutes les lignes`,
+      refused ? `${fmt(refused)} relèvent de produits non couverts par l'abonnement ; les autres n'ont pas de valeur publiée pour ces ISIN.`
+        : "MSCI n'a publié aucune valeur pour ces ISIN sur ces colonnes.")
+      .append(details("Voir les colonnes", data.empty_columns.map((c) => [c.column, lowerFirst(c.reason)])));
+  }
+  (state.job.result.warnings || []).forEach((w) => note("warn", "Avertissement", w));
 }
 
-function sizeCanvas(canvas, w, h, dpr) {
-  canvas.width = Math.round(w * dpr);
-  canvas.height = Math.round(h * dpr);
-  canvas.style.width = `${w}px`;
-  canvas.style.height = `${h}px`;
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h);
-  ctx.fill();
-}
-
-function showTip(html, event, setText) {
+/* =====================================================================
+   Infobulles
+   ===================================================================== */
+function showTip(event, build) {
   const tip = $("tip");
-  tip.innerHTML = html;
-  setText(tip);
+  tip.textContent = "";
+  build(tip);
   tip.hidden = false;
   const box = $("sheet").getBoundingClientRect();
   let x = event.clientX - box.left + 14;
-  let y = event.clientY - box.top + 14;
-  if (x + tip.offsetWidth > box.width - 8) x = event.clientX - box.left - tip.offsetWidth - 14;
-  if (y + tip.offsetHeight > box.height - 8) y = event.clientY - box.top - tip.offsetHeight - 14;
+  let y = event.clientY - box.top + 16;
+  if (x + tip.offsetWidth > box.width - 6) x = event.clientX - box.left - tip.offsetWidth - 14;
+  if (y + tip.offsetHeight > box.height - 6) y = event.clientY - box.top - tip.offsetHeight - 12;
   tip.style.left = `${Math.max(4, x)}px`;
   tip.style.top = `${Math.max(4, y)}px`;
 }
+const hideTip = () => { $("tip").hidden = true; };
 
-function hideTip() { $("tip").hidden = true; }
-
-function onColumnHover(event) {
-  const g = state.geometry;
-  if (!g) return;
-  const i = Math.floor(event.offsetX / g.cw);
-  if (i < 0 || i >= g.n) return hideTip();
-  const col = g.columns[i];
-  const filled = g.data.column_fill[i];
-  showTip('<b></b><div class="muted"></div><div></div>', event, (tip) => {
-    tip.querySelector("b").textContent = col.column;
-    tip.querySelector(".muted").textContent = col.label !== col.column ? col.label : sourceKind(col);
-    tip.lastChild.textContent = `Remplie pour ${filled} ligne${filled > 1 ? "s" : ""} sur ${g.data.rows}`;
-  });
+function describeColumn(col) {
+  if (col.kind === "input") return "Recopiée depuis votre fichier";
+  if (col.kind === "input_isin") return "ISIN saisi";
+  if (col.kind === "blocked") return "Non alimentée (correspondance à valider)";
+  return col.label !== col.column ? col.label : `Codes : ${col.candidates.join(", ")}`;
 }
 
-function sourceKind(col) {
-  return { input: "Saisie (colonne de votre fichier)", input_isin: "ISIN saisi", blocked: "Non alimentée (source à valider)" }[col.kind]
-    || col.candidates.join(" puis ");
+function onColumnHover(event) {
+  const hit = sheet.hit(event, "cols");
+  if (!hit) return hideTip();
+  const col = sheet.columns[hit.x];
+  const filled = sheet.cells.reduce((s, line) => s + (line[hit.x] !== "." ? 1 : 0), 0);
+  showTip(event, (tip) => tip.append(el("b", {}, col.column), el("div", { class: "muted" }, describeColumn(col)),
+    el("div", {}, `Remplie pour ${fmt(filled)} / ${plural(sheet.cells.length, ["ligne", "lignes"])}`)));
 }
 
 let hoverToken = 0;
 function onCellHover(event) {
-  const g = state.geometry;
-  if (!g) return;
-  const x = Math.floor(event.offsetX / g.cw);
-  const y = Math.floor(event.offsetY / ROW_H);
-  if (x < 0 || x >= g.n || y < 0 || y >= g.rows.length) return hideTip();
-  const col = g.columns[x];
-  const row = g.rows[y];
-  const code = row.cells[x];
+  const hit = sheet.hit(event, "cells");
+  if (!hit) return hideTip();
+  const col = sheet.columns[hit.x];
+  const row = sheet.rows[hit.y];
+  const code = sheet.cells[hit.y][hit.x];
   const token = ++hoverToken;
-  const render = (cell) => {
+  const draw = (cell) => {
     if (token !== hoverToken) return;
-    showTip('<b></b><div class="muted"></div><div class="val"></div><div class="muted src"></div>', event, (tip) => {
-      tip.querySelector("b").textContent = col.column;
-      tip.querySelector(".muted").textContent = `${row.isin}${row.name ? " · " + row.name : ""}`;
-      const val = tip.querySelector(".val");
-      const src = tip.querySelector(".src");
+    showTip(event, (tip) => {
+      tip.append(el("b", {}, col.column), el("div", { class: "muted" }, `${row.isin}${row.name ? " · " + row.name : ""}`));
       if (code === ".") {
-        val.textContent = "Vide";
-        src.textContent = col.kind === "msci" ? `Codes demandés : ${col.candidates.join(", ")}` : sourceKind(col);
-      } else {
-        val.textContent = cell ? formatValue(cell.value) : "…";
-        const source = SOURCE_TEXT[SOURCE_OF_CODE[code]] || "";
-        src.textContent = cell && cell.as_of ? `${source} · au ${cell.as_of}` : source;
+        tip.append(el("div", { class: "val" }, sheet.mode === "result" ? "Vide" : "En attente"),
+          el("div", { class: "muted" }, describeColumn(col)));
+        return;
       }
+      tip.append(el("div", { class: "val" }, cell ? formatValue(cell.value) : sheet.mode === "result" ? "…" : "Reçue"),
+        el("div", { class: "src" }, el("i", { style: `background:${COLORS[code]}` }),
+          `${SOURCE_OF[code] || ""}${cell && cell.as_of ? ` · au ${cell.as_of}` : ""}`));
     });
   };
-  if (code === ".") return render(null);
-  const key = `${state.view}|${y}|${col.column}`;
-  if (state.cellCache.has(key)) return render(state.cellCache.get(key));
-  render(null);
+  if (code === "." || sheet.mode !== "result") return draw(null);
+  const key = `${state.entity}|${hit.y}|${col.column}`;
+  if (state.cellCache.has(key)) return draw(state.cellCache.get(key));
+  draw(null);
   clearTimeout(onCellHover.timer);
   onCellHover.timer = setTimeout(async () => {
     try {
-      const response = await fetch(`/api/jobs/${state.job}/cell/${state.view}/${y}/${encodeURIComponent(col.column)}`);
-      const cell = await response.json();
+      const cell = await api(`/api/jobs/${state.job.id}/cell/${state.entity}/${hit.y}/${encodeURIComponent(col.column)}`);
       state.cellCache.set(key, cell);
-      render(cell);
+      draw(cell);
     } catch (e) { /* infobulle sans valeur */ }
-  }, 60);
+  }, 50);
 }
 
 function formatValue(value) {
@@ -527,117 +643,159 @@ function formatValue(value) {
   return String(value);
 }
 
-function renderNotes(data) {
-  const notes = $("notes");
-  notes.innerHTML = "";
-  const sources = (state.result.sources || {})[state.view] || {};
-  const nameOf = { v3: "L'API V3", history: "L'historique V4", v4: "L'API V4" };
-  for (const [source, info] of Object.entries(sources)) {
-    if (info.state === "ok") continue;
-    addNote(notes, "warn", `${nameOf[source] || source} n'a pas été utilisable`,
-      `${(info.detail || "Accès refusé").replace(/\.?$/, ".")} Les autres sources ont été utilisées normalement.`);
+/* =====================================================================
+   Extraction
+   ===================================================================== */
+async function onRunClick() {
+  if (running()) {
+    $("run").disabled = true;
+    try { await api(`/api/jobs/${state.job.id}/cancel`, {}); } catch (e) { /* l'état suivant le dira */ }
+    return;
   }
-
-  const attention = Object.entries(data.states).filter(([s]) => STATE_FLAG[s]);
-  if (attention.length) {
-    const text = attention.map(([s, n]) => `${n} × ${lowerFirst(STATE_TEXT[s])}`).join(" ; ");
-    const rows = data.table.filter((r) => STATE_FLAG[r.state]).slice(0, 200);
-    const note = addNote(notes, "warn", "Lignes à vérifier", `${text}. Ces lignes restent dans l'Excel, à leur place.`);
-    const det = document.createElement("details");
-    det.innerHTML = "<summary>Voir les ISIN concernés</summary><ul class=\"cols\"></ul>";
-    rows.forEach((r) => {
-      const li = document.createElement("li");
-      li.textContent = r.isin || "(vide)";
-      const span = document.createElement("span");
-      span.textContent = ` · ${lowerFirst(STATE_TEXT[r.state])}${r.problem ? " (" + lowerFirst(r.problem) + ")" : ""}`;
-      li.append(span);
-      det.querySelector("ul").append(li);
-    });
-    note.append(det);
+  // Les lignes sans ISIN ne sont pas envoyées (le serveur les ignorerait) : l'aperçu reste aligné.
+  const keep = (rows) => rows.filter((r) => r.ISIN);
+  const sent = { issuer: keep(parseText(state.texts.issuer)), fund: keep(parseText(state.texts.fund)) };
+  const strip = (rows) => rows.map(({ ISIN, Client_ID, Security_Status }) => ({ ISIN, Client_ID, Security_Status }));
+  const payload = {
+    issuer: strip(sent.issuer), fund: strip(sent.fund),
+    options: {
+      use_v3: $("opt-v3").checked, use_history: $("opt-history").checked,
+      inherit: $("opt-inherit").checked, use_cache: $("opt-cache").checked,
+    },
+  };
+  $("failure").hidden = true;
+  state.cellCache.clear();
+  try {
+    const { id } = await api("/api/run", payload);
+    state.job = { id, sent, texts: { ...state.texts }, result: null,
+      status: { state: "running", stage: "Connexion à MSCI", plan: {}, done: {}, live: {} } };
+    if (!sent[state.entity].length) selectEntity(sent.issuer.length ? "issuer" : "fund"); else refresh();
+    if (window.matchMedia("(max-width: 960px)").matches) $("sheet-panel").scrollIntoView({ behavior: REDUCED.matches ? "auto" : "smooth" });
+    poll(id);
+  } catch (error) {
+    showFailure(error.message);
   }
-
-  if (data.empty_columns.length) {
-    const refused = data.empty_columns.filter((c) => c.reason.startsWith("Non autorisé")).length;
-    const body = refused
-      ? `${refused} relèvent de produits MSCI non couverts par l'abonnement de ce compte ; les autres n'ont simplement pas de valeur publiée pour ces ISIN.`
-      : "MSCI n'a publié aucune valeur pour ces ISIN sur ces colonnes.";
-    const note = addNote(notes, "", `${data.empty_columns.length} colonne${data.empty_columns.length > 1 ? "s" : ""} MSCI vide${data.empty_columns.length > 1 ? "s" : ""} sur toutes les lignes`, body);
-    const det = document.createElement("details");
-    det.innerHTML = "<summary>Voir les colonnes</summary><ul class=\"cols\"></ul>";
-    data.empty_columns.forEach((c) => {
-      const li = document.createElement("li");
-      li.textContent = c.column;
-      const span = document.createElement("span");
-      span.textContent = ` · ${lowerFirst(c.reason)}`;
-      li.append(span);
-      det.querySelector("ul").append(li);
-    });
-    note.append(det);
-  }
-  (state.result.warnings || []).forEach((w) => addNote(notes, "warn", "Avertissement", w));
 }
 
-function lowerFirst(text) {
-  // Garde les sigles intacts (ISIN, MSCI…)
-  return /^[A-Z]{2}/.test(text) ? text : text.charAt(0).toLowerCase() + text.slice(1);
+async function poll(id) {
+  if (!state.job || state.job.id !== id) return;
+  try {
+    const status = await api(`/api/jobs/${id}`);
+    if (!state.job || state.job.id !== id) return;
+    state.job.status = status;
+    if (status.state === "running") {
+      refresh();
+      setTimeout(() => poll(id), POLL_MS);
+      return;
+    }
+    if (status.state === "done") {
+      state.job.result = status.result;
+    } else {
+      const job = state.job;
+      state.job = null;
+      if (status.state === "failed") showFailure(status.error);
+      else if (job) showFailure("Extraction annulée. Rien n'a été écrit ; relancez quand vous voulez.", "Annulée");
+    }
+    refresh();
+  } catch (error) {
+    state.job = null;
+    showFailure(error.message);
+    refresh();
+  }
 }
 
-function addNote(parent, kind, title, text) {
-  const div = document.createElement("div");
-  div.className = `note ${kind}`;
-  div.innerHTML = "<h3></h3><p></p>";
-  div.querySelector("h3").textContent = title;
-  div.querySelector("p").textContent = text;
-  parent.append(div);
-  return div;
+function showFailure(message, title = "L'extraction n'a pas abouti.") {
+  const box = $("failure");
+  box.classList.toggle("info", title === "Annulée");
+  box.textContent = "";
+  box.append(el("strong", {}, title), message);
+  box.hidden = false;
 }
 
-/* ------------------------------------------------------------------ init */
+/* =====================================================================
+   Connexion
+   ===================================================================== */
+async function loadStatus() {
+  try { state.status = await api("/api/status"); } catch (e) {
+    state.status = { configured: false, demo: false, error: "Serveur local injoignable" };
+  }
+  renderStatus();
+}
+
+function renderStatus() {
+  const s = state.status;
+  const conn = $("conn");
+  if (s.demo) { conn.dataset.state = "demo"; $("conn-label").textContent = "Démonstration"; }
+  else if (s.configured) { conn.dataset.state = "ok"; $("conn-label").textContent = s.connected ? "Connecté à MSCI" : "Identifiants chargés"; }
+  else { conn.dataset.state = "off"; $("conn-label").textContent = "Se connecter à MSCI"; }
+  $("demo-banner").hidden = !s.demo;
+  renderAccess();
+  refresh();
+}
+
+function renderAccess() {
+  const box = $("access");
+  const access = state.status && state.status.access;
+  box.textContent = "";
+  if (!access) { box.hidden = true; return; }
+  const line = (label, ok, detail) => el("div", {}, el("span", {}, label),
+    el("strong", { class: ok === true ? "yes" : ok === false ? "no" : "" }, detail));
+  const products = (list) => (list.length ? plural(list.length, ["produit", "produits"]) : "aucun produit");
+  box.append(line("Titres (V4)", access.issuer.length > 0, products(access.issuer)),
+    line("Fonds (V4)", access.fund.length > 0, products(access.fund)),
+    line("API V3", access.v3, access.v3 === true ? "accessible" : access.v3 === false ? "refusée" : "non vérifiée"));
+  const all = [...access.issuer, ...access.fund];
+  if (all.length) box.title = all.join("\n");
+  box.hidden = false;
+}
+
+/* =====================================================================
+   Initialisation
+   ===================================================================== */
 function bind() {
-  document.querySelectorAll(".input [role=tab]").forEach((tab) => {
+  document.querySelectorAll(".seg [role=tab]").forEach((tab) => {
     tab.addEventListener("click", () => selectEntity(tab.dataset.entity));
-    tab.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-        const next = state.entity === "issuer" ? "fund" : "issuer";
-        selectEntity(next);
-        $(`tab-${next}`).focus();
-      }
+    tab.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+      const next = state.entity === "issuer" ? "fund" : "issuer";
+      selectEntity(next);
+      $(`tab-${next}`).focus();
     });
   });
-  $("isins").addEventListener("input", (e) => {
-    state.texts[state.entity] = e.target.value;
+  $("isins").addEventListener("input", (event) => {
+    state.texts[state.entity] = event.target.value;
     saveLists();
     clearTimeout(bind.timer);
-    bind.timer = setTimeout(refreshCheck, 150);
+    bind.timer = setTimeout(refresh, 160);
   });
-  $("file").addEventListener("change", (e) => {
-    if (e.target.files[0]) uploadFile(e.target.files[0]);
-    e.target.value = "";
+  $("file").addEventListener("change", (event) => {
+    if (event.target.files[0]) uploadFile(event.target.files[0]);
+    event.target.value = "";
   });
   const drop = $("drop");
   ["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach((t) => drop.addEventListener(t, () => drop.classList.remove("over")));
-  drop.addEventListener("drop", (e) => {
-    e.preventDefault();
-    if (e.dataTransfer.files[0]) uploadFile(e.dataTransfer.files[0]);
-  });
-  // Un dépôt hors de la zone ne doit pas ouvrir le fichier dans le navigateur.
+  drop.addEventListener("drop", (e) => { e.preventDefault(); if (e.dataTransfer.files[0]) uploadFile(e.dataTransfer.files[0]); });
   window.addEventListener("dragover", (e) => e.preventDefault());
   window.addEventListener("drop", (e) => e.preventDefault());
 
-  $("run").addEventListener("click", run);
+  $("run").addEventListener("click", onRunClick);
 
-  $("conn").addEventListener("click", () => { $("cred-error").textContent = ""; $("dialog").showModal(); $("cid").focus(); });
+  $("conn").addEventListener("click", () => {
+    $("cred-error").textContent = "";
+    renderAccess();
+    $("dialog").showModal();
+    $("cid").focus();
+  });
   $("cred-cancel").addEventListener("click", () => $("dialog").close());
-  $("cred-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+  $("cred-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
     const button = $("cred-submit");
     button.disabled = true;
     button.textContent = "Connexion…";
     try {
-      state.status = await postJSON("/api/credentials", { client_id: $("cid").value, client_secret: $("secret").value });
+      state.status = await api("/api/credentials", { client_id: $("cid").value, client_secret: $("secret").value });
       $("secret").value = "";
-      $("dialog").close();
       renderStatus();
     } catch (error) {
       $("cred-error").textContent = error.message;
@@ -647,12 +805,12 @@ function bind() {
     }
   });
   $("demo-on").addEventListener("click", async () => {
-    state.status = await postJSON("/api/demo", { enabled: true });
+    state.status = await api("/api/demo", { enabled: true });
     $("dialog").close();
     renderStatus();
   });
   $("demo-off").addEventListener("click", async () => {
-    state.status = await postJSON("/api/demo", { enabled: false });
+    state.status = await api("/api/demo", { enabled: false });
     renderStatus();
   });
 
@@ -663,17 +821,18 @@ function bind() {
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { if (state.result && !$("result").hidden) renderView(); }, 150);
+    resizeTimer = setTimeout(() => { if (!$("sheet").hidden) { sheet.layout(); sheet.kick(); } }, 120);
   });
 }
 
 async function init() {
   loadLists();
   bind();
-  selectEntity(state.entity);
-  try {
-    state.columns = await (await fetch("/api/columns")).json();
-  } catch (e) { /* colonnes rechargées à l'affichage */ }
+  document.querySelector(".seg").dataset.active = state.entity;
+  $("isins").value = state.texts[state.entity];
+  try { state.columns = await api("/api/columns"); } catch (e) {
+    showFailure("Impossible de charger les colonnes du template : redémarrez l'application.");
+  }
   await loadStatus();
 }
 

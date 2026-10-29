@@ -12,6 +12,7 @@ Aucun secret, token ou en-tete Authorization n'est journalise.
 """
 from __future__ import annotations
 
+import hashlib
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -43,13 +44,17 @@ class MSCIHTTPError(MSCIError):
 
 class MSCIClient:
     def __init__(self, client_id: str, client_secret: str, *, timeout: int = 60,
-                 retries: int = 3, workers: int = 4,
+                 retries: int = 3, workers: int = 4, max_inflight: int = 8,
                  session_factory: Callable[[], requests.Session] = requests.Session,
                  sleep: Callable[[float], None] = time.sleep):
         if not client_id or not client_secret:
             raise ValueError("Identifiants MSCI manquants (Client ID / Client secret).")
         self._id, self._secret = client_id, client_secret
         self.timeout, self.retries, self.workers = timeout, retries, max(1, workers)
+        # Identifie le compte pour le cache des reponses, sans exposer le client_id.
+        self.cache_key = hashlib.sha256(client_id.encode()).hexdigest()[:16]
+        # Plafond global de requetes simultanees (lots paralleles imbriques, plusieurs extractions).
+        self._inflight = threading.BoundedSemaphore(max(1, max_inflight))
         self._session_factory, self._sleep = session_factory, sleep
         self._local = threading.local()
         self._token_lock = threading.Lock()
@@ -83,8 +88,9 @@ class MSCIClient:
     def _send(self, method: str, url: str, **kwargs: Any) -> requests.Response:
         for attempt in range(self.retries + 1):
             try:
-                response = self._session().request(method, url, timeout=self.timeout,
-                                                   allow_redirects=False, **kwargs)
+                with self._inflight:
+                    response = self._session().request(method, url, timeout=self.timeout,
+                                                       allow_redirects=False, **kwargs)
             except requests.exceptions.SSLError:
                 raise MSCIError("Certificat TLS refusé : contacter l'IT (ne pas désactiver TLS). "
                                 "Un certificat d'entreprise peut être déclaré via REQUESTS_CA_BUNDLE.") from None
@@ -190,6 +196,27 @@ class MSCIClient:
     def products(self, entity: str) -> list[str]:
         body = self.call("GET", "/metadata/products", params={"factor_type": entity})
         return [p["product"] for p in body["result"].get("products", []) if p.get("product")]
+
+    def check_access(self) -> dict:
+        """Ce que le compte peut lire : produits V4 par entite, et acces V3."""
+        access: dict = {"issuer": [], "fund": [], "v3": None, "errors": []}
+        for entity in ("issuer", "fund"):
+            try:
+                access[entity] = self.products(entity)
+            except MSCIHTTPError as exc:
+                if exc.status not in (403, 404):
+                    access["errors"].append(str(exc))
+            except MSCIError as exc:
+                access["errors"].append(str(exc))
+        try:
+            self.call("GET", "/metadata/factors", version="v3",
+                      params={"factor_type": "issuer", "factor_name_list": "ISSUER_NAME"})
+            access["v3"] = True
+        except MSCIHTTPError as exc:
+            access["v3"] = False if exc.status in (401, 403, 404) else None
+        except MSCIError:
+            access["v3"] = None
+        return access
 
     def close(self) -> None:
         session = getattr(self._local, "session", None)

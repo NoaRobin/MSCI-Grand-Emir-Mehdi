@@ -12,8 +12,10 @@ from openpyxl import Workbook, load_workbook
 
 from app import excel_io, mapping
 from app import isin as isin_tools
-from app.client import MSCIClient, MSCIHTTPError
-from app.engine import Options, enrich_entity
+from app.client import MSCIClient, MSCIError, MSCIHTTPError
+import threading as _threading
+
+from app.engine import CACHE, Cancelled, Extraction, Options, enrich_entity
 from app.mock import MockClient
 
 
@@ -178,10 +180,10 @@ def test_refused_secondary_source_is_not_fatal():
     assert rep["warnings"]  # catalogue indisponible signale
 
 
-def test_v4_server_error_stops_run():
+def test_v4_total_failure_is_explicit():
     def boom(payload):
         raise MSCIHTTPError(500, "v4/issuers")
-    with pytest.raises(MSCIHTTPError):
+    with pytest.raises(MSCIError):
         enrich_entity(FakeClient({("v4", "/issuers"): boom}, catalog=[]), "issuer", rows("GB00BTK05J60"),
                       mapping.load()["issuer"], Options(), report(), lambda *a: None)
 
@@ -318,3 +320,96 @@ def test_inherit_parameter_dropped_when_rejected():
                         Options(use_v3=False, use_history=False), rep, lambda *a: None)
     assert out[0]["values"]["ISSUER_NAME"] == "A"
     assert "inherit_missing_values" not in seen[-1] and rep["warnings"]
+
+
+def _issuer_rows(n):
+    # ISIN valides generes : pays + 9 caracteres + cle Luhn calculee
+    out = []
+    for i in range(n):
+        body = f"US{i:09d}"
+        for check in range(10):
+            if isin_tools.is_valid(body + str(check)):
+                out.append(body + str(check))
+                break
+    return out
+
+
+def test_failed_batch_is_isolated_and_bad_id_bisected():
+    codes = _issuer_rows(150)  # 2 lots de 100 / 50
+    bad = codes[7]
+
+    def v4(payload):
+        ids = payload["issuer_identifier_list"]
+        if ids[0] == codes[100]:
+            raise MSCIHTTPError(502, "v4/issuers")  # le 2e lot tombe en panne
+        if bad in ids:
+            raise MSCIHTTPError(400, "v4/issuers", "invalid identifier")
+        return body([{"requested_id": i, "factors": [{"name": "ISSUER_NAME", "value": i}]} for i in ids])
+
+    client = FakeClient({("v4", "/issuers"): v4}, catalog=["ISSUER_NAME"])
+    rep = report()
+    out = enrich_entity(client, "issuer", rows(*codes), mapping.load()["issuer"],
+                        Options(use_v3=False, use_history=False, inherit=False), rep, lambda *a: None)
+    states = [r["state"] for r in out]
+    assert states[0] == "reference_only" and states[99] == "reference_only"
+    assert states[7] == "api_error" and "400" in out[7]["problem"]
+    assert set(states[100:]) == {"api_error"}
+    assert rep["sources"]["issuer"]["v4"]["state"] == "partial"
+
+
+def test_cache_skips_repeated_calls():
+    CACHE.clear()
+    calls = []
+
+    def v4(payload):
+        calls.append(payload)
+        return body([{"requested_id": i, "factors": [{"name": "ISSUER_NAME", "value": "A"}]}
+                     for i in payload["issuer_identifier_list"]])
+
+    client = FakeClient({("v4", "/issuers"): v4}, catalog=["ISSUER_NAME"])
+    client.cache_key = "compte-test"
+    opts = dict(use_v3=False, use_history=False)
+    for _ in range(2):
+        out = enrich_entity(client, "issuer", rows("GB00BTK05J60"), mapping.load()["issuer"],
+                            Options(**opts), report(), lambda *a: None)
+    assert len(calls) == 1 and out[0]["values"]["ISSUER_NAME"] == "A"
+    enrich_entity(client, "issuer", rows("GB00BTK05J60"), mapping.load()["issuer"],
+                  Options(use_cache=False, **opts), report(), lambda *a: None)
+    assert len(calls) == 2
+
+
+def test_cancel_stops_before_next_request():
+    stop = _threading.Event()
+    stop.set()
+    client = FakeClient({("v4", "/issuers"): lambda p: body([])}, catalog=["ISSUER_NAME"])
+    job = Extraction(client, "issuer", rows("GB00BTK05J60"), mapping.load()["issuer"], Options(),
+                     report(), cancel=stop)
+    with pytest.raises(Cancelled):
+        job.run()
+
+
+def test_server_check_and_cancel(monkeypatch):
+    from app import server
+    monkeypatch.setenv("MSCI_DEMO", "1")
+    server.Handler.state = server.State()
+    server.Handler.state.mock.latency = 0.3
+    httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{httpd.server_address[1]}"
+
+    def post(path, payload):
+        req = Request(base + path, data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
+        return json.load(urlopen(req))
+    try:
+        access = post("/api/check", {})["access"]
+        assert access["issuer"] and access["v3"] is True
+        job = post("/api/run", {"issuer": ["GB00BTK05J60"], "options": {"use_cache": False}})["id"]
+        post(f"/api/jobs/{job}/cancel", {})
+        for _ in range(50):
+            data = json.load(urlopen(f"{base}/api/jobs/{job}"))
+            if data["state"] != "running":
+                break
+            threading.Event().wait(0.1)
+        assert data["state"] == "cancelled"
+    finally:
+        httpd.shutdown()
