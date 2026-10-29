@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Extraction MSCI ESG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&display=swap">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='4' height='14' rx='1' fill='%230F7D5A'/%3E%3Crect x='6' y='5' width='4' height='10' rx='1' fill='%233A7FC1'/%3E%3Crect x='11' y='9' width='4' height='6' rx='1' fill='%23B87A0A'/%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="4" height="14" rx="1"/><rect x="6" y="5" width="4" height="10" rx="1"/><rect x="11" y="9" width="4" height="6" rx="1"/></svg>
+      <h1>Extraction MSCI ESG</h1>
+    </div>
+    <button class="conn" id="conn" type="button" aria-haspopup="dialog">
+      <span class="dot" aria-hidden="true"></span><span id="conn-label">Vérification…</span>
+    </button>
+  </header>
+
+  <div class="demo-banner" id="demo-banner" hidden>
+    Mode démonstration : les valeurs sont fictives et le fichier est préfixé DEMO_.
+    <button type="button" class="link" id="demo-off">Quitter la démo</button>
+  </div>
+
+  <main class="layout">
+    <!-- Colonne gauche : la liste d'ISIN -->
+    <section class="input" aria-labelledby="input-title">
+      <h2 id="input-title">ISIN à enrichir</h2>
+
+      <div class="tabs" role="tablist" aria-label="Type de valeurs">
+        <button role="tab" id="tab-issuer" aria-selected="true" aria-controls="panel-list" data-entity="issuer">
+          Titres <span class="count" data-count="issuer">0</span>
+        </button>
+        <button role="tab" id="tab-fund" aria-selected="false" aria-controls="panel-list" data-entity="fund">
+          Fonds <span class="count" data-count="fund">0</span>
+        </button>
+      </div>
+
+      <div id="panel-list" role="tabpanel" aria-labelledby="tab-issuer">
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept=".xlsx,.xlsm,.csv,.txt" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0-4 4m4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/></svg>
+          <span><strong>Déposer un Excel</strong> ou cliquer pour choisir</span>
+          <small>Colonne « ISIN » ; feuilles Titres / Fonds reconnues</small>
+        </label>
+
+        <label class="paste-label" for="isins">Ou coller les ISIN, un par ligne</label>
+        <textarea id="isins" spellcheck="false" autocomplete="off"
+          placeholder="GB00BTK05J60&#10;CA3359341052&#10;US0126531013&#10;&#10;Colonnes facultatives après une tabulation :&#10;ISIN   Client_ID   Security_Status"></textarea>
+
+        <div class="check" id="check" aria-live="polite"></div>
+      </div>
+
+      <details class="options">
+        <summary>Sources interrogées</summary>
+        <p class="hint">L'API V4 est toujours interrogée. Les compléments ne remplissent que les cellules restées vides.</p>
+        <label class="toggle"><input type="checkbox" id="opt-v3" checked>
+          <span><strong>Compléter avec l'API V3</strong><br>Droits ESG Manager, souvent plus larges que les produits V4.</span></label>
+        <label class="toggle"><input type="checkbox" id="opt-history" checked>
+          <span><strong>Compléter avec l'historique</strong><br>Dernière valeur publiée, datée dans le diagnostic.</span></label>
+        <label class="toggle"><input type="checkbox" id="opt-inherit" checked>
+          <span><strong>Valeurs de l'émetteur parent</strong><br>Pour obligations et filiales sans notation propre.</span></label>
+      </details>
+
+      <button class="primary" id="run" type="button" disabled>Extraire les données</button>
+      <p class="run-note" id="run-note"></p>
+    </section>
+
+    <!-- Colonne droite : progression et résultat -->
+    <section class="output" aria-labelledby="output-title" aria-live="polite">
+      <div class="empty" id="empty">
+        <h2 id="output-title">Le fichier d'import, rempli depuis MSCI</h2>
+        <ol class="steps">
+          <li><span><strong>Ajoutez les ISIN</strong> : Excel déposé ou liste collée, côté Titres ou Fonds.</span></li>
+          <li><span><strong>Lancez l'extraction</strong> : API V4, puis V3 et historique pour combler les cellules vides.</span></li>
+          <li><span><strong>Téléchargez l'Excel</strong> : feuilles « Template Import Titres » et « Template Import Fonds », en-têtes inchangés.</span></li>
+        </ol>
+      </div>
+
+      <div class="progress" id="progress" hidden>
+        <p class="stage" id="stage">Préparation</p>
+        <div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="track"><div class="fill" id="fill"></div></div>
+      </div>
+
+      <div class="failure" id="failure" hidden role="alert"></div>
+
+      <div class="result" id="result" hidden>
+        <div class="result-head">
+          <div>
+            <h2 id="result-title"></h2>
+            <p class="result-sub" id="result-sub"></p>
+          </div>
+          <div class="actions">
+            <a class="primary" id="download" href="#" download>Télécharger l'Excel</a>
+            <a class="secondary" id="report" href="#" download>Diagnostic</a>
+          </div>
+        </div>
+
+        <div class="tabs small" role="tablist" id="result-tabs" aria-label="Feuille affichée"></div>
+
+        <p class="fill-line" id="fill-line"></p>
+        <ul class="legend" id="legend" aria-label="Légende des cellules"></ul>
+
+        <figure class="sheet" id="sheet">
+          <figcaption class="visually-hidden">Aperçu du fichier : une ligne par ISIN, une case par colonne du template.</figcaption>
+          <div class="sheet-scroll" id="sheet-scroll">
+            <div class="sheet-labels" id="sheet-labels"></div>
+            <div class="sheet-cells">
+              <canvas id="col-canvas" height="34" aria-hidden="true"></canvas>
+              <canvas id="cell-canvas" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <div class="tip" id="tip" role="tooltip" hidden></div>
+        </figure>
+        <p class="sheet-note" id="sheet-note"></p>
+
+        <div class="notes" id="notes"></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="dialog" aria-labelledby="dialog-title">
+    <form method="dialog" id="cred-form">
+      <h2 id="dialog-title">Connexion MSCI</h2>
+      <p class="hint">Identifiants OAuth de l'API ESG (MSCI Customer Center). Ils restent sur ce poste, en mémoire, le temps de la session ; pour les garder, renseignez le fichier <code>.env</code>.</p>
+      <label>Client ID<input id="cid" autocomplete="off" required></label>
+      <label>Client secret<input id="secret" type="password" autocomplete="off" required></label>
+      <p class="form-error" id="cred-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="button" class="secondary" id="cred-cancel">Annuler</button>
+        <button type="submit" class="primary" id="cred-submit">Se connecter</button>
+      </div>
+      <p class="hint demo-hint">Pas encore d'identifiants ? <button type="button" class="link" id="demo-on">Essayer avec des données fictives</button></p>
+    </form>
+  </dialog>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
