@@ -1,0 +1,1516 @@
+{
+ "issuer": {
+  "ISSUER_NAME": {
+   "kind": "msci",
+   "candidates": [
+    "ISSUER_NAME"
+   ],
+   "note": "Metadonnee emetteur, jamais remplacee par un identifiant de titre."
+  },
+  "Client_ID": {
+   "kind": "input",
+   "field": "Client_ID",
+   "note": "Champ metier facultatif fourni en entree; sinon vide."
+  },
+  "Security_Status": {
+   "kind": "input",
+   "field": "Security_Status",
+   "note": "Champ metier facultatif fourni en entree; sinon vide."
+  },
+  "ISSUER_TICKER": {
+   "kind": "msci",
+   "candidates": [
+    "ISSUER_TICKER"
+   ],
+   "note": "Metadonnee emetteur, jamais remplacee par un identifiant de titre."
+  },
+  "ISSUER_CUSIP": {
+   "kind": "msci",
+   "candidates": [
+    "ISSUER_CUSIP"
+   ],
+   "note": "Metadonnee emetteur, jamais remplacee par un identifiant de titre."
+  },
+  "ISSUER_SEDOL": {
+   "kind": "msci",
+   "candidates": [
+    "ISSUER_SEDOL"
+   ],
+   "note": "Metadonnee emetteur, jamais remplacee par un identifiant de titre."
+  },
+  "ISSUER_ISIN": {
+   "kind": "msci",
+   "candidates": [
+    "ISSUER_ISIN"
+   ],
+   "note": "Metadonnee emetteur, jamais remplacee par un identifiant de titre."
+  },
+  "ISSUER_CNTRY_DOMICILE": {
+   "kind": "msci",
+   "candidates": [
+    "ISSUER_CNTRY_DOMICILE"
+   ],
+   "note": ""
+  },
+  "ISSUERID": {
+   "kind": "msci",
+   "candidates": [
+    "ISSUERID"
+   ],
+   "note": "Metadonnee emetteur, jamais remplacee par un identifiant de titre."
+  },
+  "ESG_RATING_DATE": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_DATE",
+    "IVA_RATING_DATE"
+   ],
+   "note": "IVA_RATING_DATE = « ESG Rating Date » dans le catalogue MSCI (code ESG_RATING_DATE inexistant)."
+  },
+  "ESG_RATING": {
+   "kind": "msci",
+   "candidates": [
+    "IVA_COMPANY_RATING"
+   ],
+   "note": "Candidat autorise dans Priorites de verification; verifier definition et unite avant production."
+  },
+  "ESG_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "INDUSTRY_ADJUSTED_SCORE"
+   ],
+   "note": "Candidat autorise dans Priorites de verification; verifier definition et unite avant production."
+  },
+  "ESG_ENVIRONMENTAL_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_ENVIRONMENTAL_SCORE",
+    "ENVIRONMENTAL_PILLAR_SCORE"
+   ],
+   "note": "ESG_ENVIRONMENTAL_SCORE est un facteur Fonds ; côté émetteur le score de pilier E est ENVIRONMENTAL_PILLAR_SCORE."
+  },
+  "ESG_ENVIRONMENTAL_WEIGHT": {
+   "kind": "msci",
+   "candidates": [
+    "ENVIRONMENTAL_PILLAR_WEIGHT"
+   ],
+   "note": "Candidat autorise dans Priorites de verification; verifier definition et unite avant production."
+  },
+  "ESG_SOCIAL_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_SOCIAL_SCORE",
+    "SOCIAL_PILLAR_SCORE"
+   ],
+   "note": "ESG_SOCIAL_SCORE est un facteur Fonds ; côté émetteur le score de pilier S est SOCIAL_PILLAR_SCORE."
+  },
+  "ESG_SOCIAL_WEIGHT": {
+   "kind": "msci",
+   "candidates": [
+    "SOCIAL_PILLAR_WEIGHT"
+   ],
+   "note": "Candidat autorise dans Priorites de verification; verifier definition et unite avant production."
+  },
+  "ESG_GOVERNANCE_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_GOVERNANCE_SCORE",
+    "GOVERNANCE_PILLAR_SCORE"
+   ],
+   "note": "ESG_GOVERNANCE_SCORE est un facteur Fonds ; côté émetteur le score de pilier G est GOVERNANCE_PILLAR_SCORE."
+  },
+  "ESG_GOVERNANCE_WEIGHT": {
+   "kind": "msci",
+   "candidates": [
+    "GOVERNANCE_PILLAR_WEIGHT"
+   ],
+   "note": "Candidat autorise dans Priorites de verification; verifier definition et unite avant production."
+  },
+  "CARBON_EMISSIONS_SCOPE_12_INTEN": {
+   "kind": "msci",
+   "candidates": [
+    "CARBON_EMISSIONS_SCOPE_12_INTEN"
+   ],
+   "note": ""
+  },
+  "CARBON_GOVERNMENT_CO2_INTENSITY_GDP_TONPERMN": {
+   "kind": "msci",
+   "candidates": [
+    "CARBON_GOVERNMENT_CO2_INTENSITY_GDP_TONPERMN"
+   ],
+   "note": ""
+  },
+  "CARBON_EMISSIONS_EVIC_SCOPE_12_INTEN": {
+   "kind": "msci",
+   "candidates": [
+    "CARBON_EMISSIONS_EVIC_SCOPE_12_INTEN"
+   ],
+   "note": ""
+  },
+  "THERMAL_COAL_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "THERMAL_COAL_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "UNGC_COMPLIANCE": {
+   "kind": "msci",
+   "candidates": [
+    "UNGC_COMPLIANCE"
+   ],
+   "note": ""
+  },
+  "CB_TIE": {
+   "kind": "msci",
+   "candidates": [
+    "CB_TIE"
+   ],
+   "note": ""
+  },
+  "LM_TIE": {
+   "kind": "msci",
+   "candidates": [
+    "LM_TIE"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_TREND": {
+   "kind": "msci",
+   "candidates": [
+    "IVA_RATING_TREND"
+   ],
+   "note": "Candidat autorise dans Priorites de verification; verifier definition et unite avant production."
+  },
+  "FOSSIL_FUEL_RESERVES": {
+   "kind": "msci",
+   "candidates": [
+    "FOSSIL_FUEL_RESERVES"
+   ],
+   "note": ""
+  },
+  "THERMAL_COAL_RESERVES": {
+   "kind": "msci",
+   "candidates": [
+    "THERMAL_COAL_RESERVES"
+   ],
+   "note": ""
+  },
+  "CBN_LCT_CATEGORY": {
+   "kind": "msci",
+   "candidates": [
+    "CBN_LCT_CATEGORY"
+   ],
+   "note": ""
+  },
+  "CBN_LCT_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "CBN_LCT_SCORE"
+   ],
+   "note": ""
+  },
+  "ITR": {
+   "kind": "msci",
+   "candidates": [
+    "ITR"
+   ],
+   "note": "Code emetteur exact uniquement si expose. Ne jamais substituer FUND_IMPLIED_TEMP_RISE."
+  },
+  "EST_EU_TAXONOMY_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "EST_EU_TAXONOMY_MAX_REV"
+   ],
+   "note": ""
+  },
+  "PCT_NONRENEW_CONSUMP_PROD": {
+   "kind": "msci",
+   "candidates": [
+    "PCT_NONRENEW_CONSUMP_PROD"
+   ],
+   "note": ""
+  },
+  "ACTIVE_FF_SECTOR_EXPOSURE": {
+   "kind": "msci",
+   "candidates": [
+    "ACTIVE_FF_SECTOR_EXPOSURE"
+   ],
+   "note": ""
+  },
+  "CT_ALT_ENERGY_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "CT_ALT_ENERGY_MAX_REV"
+   ],
+   "note": ""
+  },
+  "CT_ENERGY_EFF_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "CT_ENERGY_EFF_MAX_REV"
+   ],
+   "note": ""
+  },
+  "CT_TOTAL_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "CT_TOTAL_MAX_REV"
+   ],
+   "note": ""
+  },
+  "ENVIRONMENT_CONTROVERSY_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "ENVIRONMENT_CONTROVERSY_SCORE"
+   ],
+   "note": ""
+  },
+  "THERMAL_COAL_INVOLVEMENT_ANYPCT": {
+   "kind": "msci",
+   "candidates": [
+    "THERMAL_COAL_INVOLVEMENT_ANYPCT"
+   ],
+   "note": ""
+  },
+  "CARBON_SCOPE_12_INTEN_3Y_TREND_NM": {
+   "kind": "msci",
+   "candidates": [
+    "CARBON_SCOPE_12_INTEN_3Y_TREND_NM"
+   ],
+   "note": ""
+  },
+  "CBN_RENEW_ENER_USE_M": {
+   "kind": "msci",
+   "candidates": [
+    "CBN_RENEW_ENER_USE_M"
+   ],
+   "note": ""
+  },
+  "OIL_SANDS_RESERVES": {
+   "kind": "msci",
+   "candidates": [
+    "OIL_SANDS_RESERVES"
+   ],
+   "note": ""
+  },
+  "SHALE_GAS_RESERVES": {
+   "kind": "msci",
+   "candidates": [
+    "SHALE_GAS_RESERVES"
+   ],
+   "note": ""
+  },
+  "SI_TOTAL_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "SI_TOTAL_MAX_REV"
+   ],
+   "note": ""
+  },
+  "SI_SUST_IMPACT_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "SI_SUST_IMPACT_MAX_REV"
+   ],
+   "note": ""
+  },
+  "SRI_CRITERIA": {
+   "kind": "msci",
+   "candidates": [
+    "SRI_CRITERIA"
+   ],
+   "note": ""
+  },
+  "ALC_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "ALC_MAX_REV"
+   ],
+   "note": ""
+  },
+  "CWEAP_TIE": {
+   "kind": "msci",
+   "candidates": [
+    "CWEAP_TIE"
+   ],
+   "note": ""
+  },
+  "WEAP_BIO_CHEM_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "WEAP_BIO_CHEM_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "CONTRO_WEAP_CBLMBW_ANYTIE": {
+   "kind": "msci",
+   "candidates": [
+    "CONTRO_WEAP_CBLMBW_ANYTIE"
+   ],
+   "note": ""
+  },
+  "TOB_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "TOB_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "TOB_DIST_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "TOB_DIST_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "TOB_OWN_BY": {
+   "kind": "msci",
+   "candidates": [
+    "TOB_OWN_BY"
+   ],
+   "note": ""
+  },
+  "TOB_OWN_OF": {
+   "kind": "msci",
+   "candidates": [
+    "TOB_OWN_OF"
+   ],
+   "note": ""
+  },
+  "AE_DIST_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "AE_DIST_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "AE_PROD_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "AE_PROD_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "AE_RET_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "AE_RET_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "AE_OWN_BY": {
+   "kind": "msci",
+   "candidates": [
+    "AE_OWN_BY"
+   ],
+   "note": ""
+  },
+  "AE_OWN_OF": {
+   "kind": "msci",
+   "candidates": [
+    "AE_OWN_OF"
+   ],
+   "note": ""
+  },
+  "GAM_LICEN_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "GAM_LICEN_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "GAM_OWN_OF": {
+   "kind": "msci",
+   "candidates": [
+    "GAM_OWN_OF"
+   ],
+   "note": ""
+  },
+  "GAM_OWN_BY": {
+   "kind": "msci",
+   "candidates": [
+    "GAM_OWN_BY"
+   ],
+   "note": ""
+  },
+  "GAM_OPER_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "GAM_OPER_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "GAM_SUPPOR_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "GAM_SUPPOR_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "OIL_GAS_ANY_TIE": {
+   "kind": "msci",
+   "candidates": [
+    "OIL_GAS_ANY_TIE"
+   ],
+   "note": ""
+  },
+  "NACE_GROUP_CODE": {
+   "kind": "msci",
+   "candidates": [
+    "NACE_GROUP_CODE"
+   ],
+   "note": "Code exact uniquement si present au catalogue issuer. Aucun remplacement approximatif. Definition/unite a valider."
+  },
+  "PALM_TOTAL_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "PALM_TOTAL_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "PALM_DIST_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "PALM_DIST_MAX_REV_PCT"
+   ],
+   "note": "Code exact uniquement si present au catalogue issuer. Aucun remplacement approximatif. Definition/unite a valider."
+  },
+  "PALM_PROD_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "PALM_PROD_MAX_REV_PCT"
+   ],
+   "note": "Code exact uniquement si present au catalogue issuer. Aucun remplacement approximatif. Definition/unite a valider."
+  },
+  "TOB_PROD_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "TOB_PROD_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "TOB_RET_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "TOB_RET_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "TOB_SUPP_MAX_REV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "TOB_SUPP_MAX_REV_PCT"
+   ],
+   "note": ""
+  },
+  "ENVIRONMENT_CONTROVERSY_FLAG": {
+   "kind": "msci",
+   "candidates": [
+    "ENVIRONMENT_CONTROVERSY_FLAG"
+   ],
+   "note": ""
+  },
+  "CARBON_EMISSIONS_SALES_EUR_SCOPE123_INTEN": {
+   "kind": "msci",
+   "candidates": [
+    "CARBON_EMISSIONS_SALES_EUR_SCOPE123_INTEN"
+   ],
+   "note": ""
+  },
+  "HAS_SBTI_APPROVED_TARGET": {
+   "kind": "msci",
+   "candidates": [
+    "HAS_SBTI_APPROVED_TARGET"
+   ],
+   "note": ""
+  },
+  "OPS_PROT_BIODIV_CONTROVS": {
+   "kind": "msci",
+   "candidates": [
+    "OPS_PROT_BIODIV_CONTROVS"
+   ],
+   "note": ""
+  },
+  "GENDER_PAY_GAP_RATIO": {
+   "kind": "msci",
+   "candidates": [
+    "GENDER_PAY_GAP_RATIO"
+   ],
+   "note": ""
+  },
+  "LABOR_RIGHTS_CONTROVERSY_FLAG": {
+   "kind": "msci",
+   "candidates": [
+    "LABOR_RIGHTS_CONTROVERSY_FLAG"
+   ],
+   "note": ""
+  },
+  "LABOR_RIGHTS_DIVERSITY_FLAG": {
+   "kind": "msci",
+   "candidates": [
+    "LABOR_RIGHTS_DIVERSITY_FLAG"
+   ],
+   "note": ""
+  },
+  "DIVERSITY_PROGRAMS_M": {
+   "kind": "msci",
+   "candidates": [
+    "DIVERSITY_PROGRAMS_M"
+   ],
+   "note": ""
+  },
+  "HUMAN_CAPITAL_DEV_MGMT_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "HUMAN_CAPITAL_DEV_MGMT_SCORE"
+   ],
+   "note": ""
+  },
+  "OVERALL_FLAG": {
+   "kind": "msci",
+   "candidates": [
+    "OVERALL_FLAG"
+   ],
+   "note": ""
+  },
+  "MECH_UN_GLOBAL_COMPACT": {
+   "kind": "msci",
+   "candidates": [
+    "MECH_UN_GLOBAL_COMPACT"
+   ],
+   "note": ""
+  },
+  "LABOR_RIGHTS_EMP_HS_FLAG": {
+   "kind": "msci",
+   "candidates": [
+    "LABOR_RIGHTS_EMP_HS_FLAG"
+   ],
+   "note": ""
+  },
+  "TRIR": {
+   "kind": "msci",
+   "candidates": [
+    "TRIR"
+   ],
+   "note": ""
+  },
+  "CONTR_CONTROVERSIAL_WORKPLACE_M": {
+   "kind": "msci",
+   "candidates": [
+    "CONTR_CONTROVERSIAL_WORKPLACE_M"
+   ],
+   "note": ""
+  },
+  "CONTR_HEALTH_SAFETY_M": {
+   "kind": "msci",
+   "candidates": [
+    "CONTR_HEALTH_SAFETY_M"
+   ],
+   "note": ""
+  },
+  "BOARD_INDEP_OTHER_INTERESTS_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "BOARD_INDEP_OTHER_INTERESTS_PCT"
+   ],
+   "note": ""
+  },
+  "FM_BOARD_RATIO": {
+   "kind": "msci",
+   "candidates": [
+    "FEMALE_DIRECTORS_PCT"
+   ],
+   "note": "Candidat autorise dans Priorites de verification; verifier definition et unite avant production."
+  },
+  "OWNERSHIP_AND_CONTROL_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "OWNERSHIP_AND_CONTROL_SCORE"
+   ],
+   "note": ""
+  },
+  "PAY_CONTROVERSY": {
+   "kind": "msci",
+   "candidates": [
+    "PAY_CONTROVERSY"
+   ],
+   "note": ""
+  },
+  "CONTR_BRIB_CORRUPT_N_SEVERE": {
+   "kind": "msci",
+   "candidates": [
+    "CONTR_BRIB_CORRUPT_N_SEVERE"
+   ],
+   "note": ""
+  },
+  "CORR_BRIB_POLICY_UN": {
+   "kind": "msci",
+   "candidates": [
+    "CORR_BRIB_POLICY_UN"
+   ],
+   "note": ""
+  },
+  "PALM_RSPO_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "PALM_RSPO_PCT"
+   ],
+   "note": "Code exact uniquement si present au catalogue issuer. Aucun remplacement approximatif. Definition/unite a valider."
+  }
+ },
+ "fund": {
+  "FUND_SHARE_CLASS_ID": {
+   "kind": "blocked",
+   "note": "Ne pas assimiler automatiquement cet identifiant au MDSUID sans definition metier."
+  },
+  "FUND_NAME": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_NAME"
+   ],
+   "coverage": "FUND_NAME",
+   "note": "Nom du fonds (facteur ou référentiel coverage)."
+  },
+  "Client_ID": {
+   "kind": "input",
+   "field": "Client_ID",
+   "note": "Champ metier facultatif fourni en entree; sinon vide."
+  },
+  "Security_Status": {
+   "kind": "input",
+   "field": "Security_Status",
+   "note": "Champ metier facultatif fourni en entree; sinon vide."
+  },
+  "FUND_ISIN": {
+   "kind": "input_isin",
+   "note": "ISIN de la part fourni en entree."
+  },
+  "FUND_LATEST_HOLDINGS_DATE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LATEST_HOLDINGS_DATE"
+   ],
+   "note": ""
+  },
+  "FUND_LIPPER_GLOBAL_CLASS": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LIPPER_GLOBAL_CLASS"
+   ],
+   "note": ""
+  },
+  "FUND_LIPPER_GLOBAL_CLASS_SIZE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LIPPER_GLOBAL_CLASS_SIZE"
+   ],
+   "note": ""
+  },
+  "FUND_WEIGHTED_AVG_ESG_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_WEIGHTED_AVG_ESG_SCORE"
+   ],
+   "note": ""
+  },
+  "FUND_WEIGHTED_AVG_SCORE_PCTL_PEER": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_WEIGHTED_AVG_SCORE_PCTL_PEER"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_QUALITY_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_QUALITY_SCORE"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_QUALITY_SCORE_PCTL_PEER": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_QUALITY_SCORE_PCTL_PEER"
+   ],
+   "note": ""
+  },
+  "ESG_ENVIRONMENTAL_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_ENVIRONMENTAL_SCORE"
+   ],
+   "note": ""
+  },
+  "ESG_SOCIAL_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_SOCIAL_SCORE"
+   ],
+   "note": ""
+  },
+  "ESG_GOVERNANCE_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_GOVERNANCE_SCORE"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_COVERAGE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_COVERAGE"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_COVERAGE_OVERALL": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_COVERAGE_OVERALL"
+   ],
+   "note": ""
+  },
+  "FUND_WEIGHTED_AVG_CARBON_INTEN": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_WEIGHTED_AVG_CARBON_INTEN"
+   ],
+   "note": ""
+  },
+  "FUND_WEIGHTED_AVG_CARBON_INTEN_COVERAGE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_WEIGHTED_AVG_CARBON_INTEN_COVERAGE"
+   ],
+   "note": ""
+  },
+  "FUND_WEIGHTED_AVG_SOV_CARBON_INTEN": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_WEIGHTED_AVG_SOV_CARBON_INTEN"
+   ],
+   "note": ""
+  },
+  "FUND_WEIGHTED_AVG_SOV_CARBON_INTEN_COVERAGE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_WEIGHTED_AVG_SOV_CARBON_INTEN_COVERAGE"
+   ],
+   "note": ""
+  },
+  "FUND_FINANCED_CARBON_EMISSIONS": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_FINANCED_CARBON_EMISSIONS"
+   ],
+   "note": ""
+  },
+  "FUND_FINANCED_CARBON_EMISSIONS_COVERAGE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_FINANCED_CARBON_EMISSIONS_COVERAGE"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_RATING": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_RATING"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_AAA": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_AAA"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_AA": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_AA"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_A": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_A"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_BBB": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_BBB"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_BB": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_BB"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_B": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_B"
+   ],
+   "note": ""
+  },
+  "ESG_RATING_CCC": {
+   "kind": "msci",
+   "candidates": [
+    "ESG_RATING_CCC"
+   ],
+   "note": ""
+  },
+  "FUND_THERMAL_COAL_MODER_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_THERMAL_COAL_MODER_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_THERMAL_COAL_HIGH_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_THERMAL_COAL_HIGH_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_UNGC_COMPLIANCE_VIOLATION_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_UNGC_COMPLIANCE_VIOLATION_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_CM_TIE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CM_TIE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_LM_TIE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LM_TIE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_TREND_NONE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_TREND_NONE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_TREND_POSITIVE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_TREND_POSITIVE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_TREND_NEGATIVE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_TREND_NEGATIVE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_TREND_STABLE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_TREND_STABLE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_LEADERS_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_LEADERS_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_LAGGARDS_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_LAGGARDS_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SUSTAINABLE_IMPACT_INVOLV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SUSTAINABLE_IMPACT_INVOLV_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SUSTAINABLE_IMPACT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SUSTAINABLE_IMPACT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SOCIAL_IMPACT_INVOLV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SOCIAL_IMPACT_INVOLV_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SOCIAL_IMPACT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SOCIAL_IMPACT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_CLEAN_TECH_INVOLV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CLEAN_TECH_INVOLV_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_CLEAN_TECH_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CLEAN_TECH_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_FOSSIL_FUEL_RESERVES_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_FOSSIL_FUEL_RESERVES_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_THERMAL_COAL_RESERVES": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_THERMAL_COAL_RESERVES"
+   ],
+   "note": ""
+  },
+  "FUND_LCT_CAT_ASSET_STRAND_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LCT_CAT_ASSET_STRAND_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_LCT_CAT_NEUTRAL_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LCT_CAT_NEUTRAL_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_LCT_CAT_OPERAT_TRANSITION_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LCT_CAT_OPERAT_TRANSITION_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_LCT_CAT_PRODUCT_TRANSITION_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LCT_CAT_PRODUCT_TRANSITION_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_LCT_CAT_SOLUTIONS_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LCT_CAT_SOLUTIONS_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_LOW_CARBON_TRANSITION": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LOW_CARBON_TRANSITION"
+   ],
+   "note": ""
+  },
+  "FUND_LOW_CARBON_TRANS_SCORE_COVERAGE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LOW_CARBON_TRANS_SCORE_COVERAGE"
+   ],
+   "note": ""
+  },
+  "FUND_IMPLIED_TEMP_RISE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_IMPLIED_TEMP_RISE"
+   ],
+   "note": ""
+  },
+  "FUND_IMPLIED_TEMP_RISE_COVERAGE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_IMPLIED_TEMP_RISE_COVERAGE"
+   ],
+   "note": ""
+  },
+  "FUND_REV_EXP_EST_EU_TAXONOMY_MAX_REV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_REV_EXP_EST_EU_TAXONOMY_MAX_REV"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_ACTIVE_FF_SECTOR_EXPOSURE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_ACTIVE_FF_SECTOR_EXPOSURE"
+   ],
+   "note": ""
+  },
+  "FUND_ALT_ENERGY_INVOLV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ALT_ENERGY_INVOLV_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ALT_ENERGY_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ALT_ENERGY_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ENERGY_EFF_INVOLV_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ENERGY_EFF_INVOLV_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ENERGY_EFF_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ENERGY_EFF_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_VERY_SEVERE_ENV_CONTROVERSY_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_VERY_SEVERE_ENV_CONTROVERSY_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_HIGH_IMPACT_FOSSIL_FUEL_RESERVES_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_HIGH_IMPACT_FOSSIL_FUEL_RESERVES_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_NON_DETER": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_NON_DETER"
+   ],
+   "note": ""
+  },
+  "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_IMPROV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_IMPROV"
+   ],
+   "note": ""
+  },
+  "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_STABLE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_STABLE"
+   ],
+   "note": ""
+  },
+  "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_WORSE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_WORSE"
+   ],
+   "note": ""
+  },
+  "FUND_CBN_RENEW_ENER_USE_M": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CBN_RENEW_ENER_USE_M"
+   ],
+   "note": ""
+  },
+  "FUND_SRI_EXCLUSION_CRITERIA_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SRI_EXCLUSION_CRITERIA_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_ENV_SCORE_AVG_PEER": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_ENV_SCORE_AVG_PEER"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_SOCIAL_SCORE_AVG_PEER": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_SOCIAL_SCORE_AVG_PEER"
+   ],
+   "note": ""
+  },
+  "FUND_ESG_GOV_SCORE_AVG_PEER": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ESG_GOV_SCORE_AVG_PEER"
+   ],
+   "note": ""
+  },
+  "FP_REG_FRAME_SFDR_ART6": {
+   "kind": "msci",
+   "candidates": [
+    "FP_REG_FRAME_SFDR_ART6"
+   ],
+   "note": ""
+  },
+  "FP_REG_FRAME_SFDR_ART8": {
+   "kind": "msci",
+   "candidates": [
+    "FP_REG_FRAME_SFDR_ART8"
+   ],
+   "note": ""
+  },
+  "FP_REG_FRAME_SFDR_ART9": {
+   "kind": "msci",
+   "candidates": [
+    "FP_REG_FRAME_SFDR_ART9"
+   ],
+   "note": ""
+  },
+  "FUND_CONTR_WEAP_TIE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CONTR_WEAP_TIE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_WEAP_BIO_CHEM_TIE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_WEAP_BIO_CHEM_TIE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_CONTRO_WEAP_CBLMBW_ANYTIE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_CONTRO_WEAP_CBLMBW_ANYTIE"
+   ],
+   "note": ""
+  },
+  "FUND_AE_MODER_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_AE_MODER_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_GAM_MODER_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_GAM_MODER_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_TOB_HIGH_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_TOB_HIGH_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_OIL_GAS_ANY_TIE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_OIL_GAS_ANY_TIE"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_PROD_CHEM": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_PROD_CHEM"
+   ],
+   "note": ""
+  },
+  "FUND_PALM_TIE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_PALM_TIE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_PALM_MODER_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_PALM_MODER_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_PALM_HIGH_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_PALM_HIGH_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_TOB_TIE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_TOB_TIE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_TOB_MODER_RESTRICT_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_TOB_MODER_RESTRICT_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_THERMAL_COAL_TIE_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_THERMAL_COAL_TIE_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_ENVIRONMENT_CONTROVERSY_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_ENVIRONMENT_CONTROVERSY_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_GHG_INTENSITY": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_GHG_INTENSITY"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_GHG_INTENSITY_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_GHG_INTENSITY_COV"
+   ],
+   "note": ""
+  },
+  "FUND_HAS_SBTI_APPROVED_TARGET": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_HAS_SBTI_APPROVED_TARGET"
+   ],
+   "note": ""
+  },
+  "FUND_HAS_SBTI_APPROVED_TARGET_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_HAS_SBTI_APPROVED_TARGET_COV"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_OPS_PROT_BIODIV_CONTROVS": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_OPS_PROT_BIODIV_CONTROVS"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_OPS_PROT_BIODIV_CONTROVS_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_OPS_PROT_BIODIV_CONTROVS_COV"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_GENDER_PAY_GAP_RATIO": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_GENDER_PAY_GAP_RATIO"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_GENDER_PAY_GAP_RATIO_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_GENDER_PAY_GAP_RATIO_COV"
+   ],
+   "note": ""
+  },
+  "FUND_LABOR_RIGHTS_CONTROVERSY_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_LABOR_RIGHTS_CONTROVERSY_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_CONTR_DISCRIMINATION_DIV_N_SEVERE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_CONTR_DISCRIMINATION_DIV_N_SEVERE"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_CONTR_DISCRIMINATION_DIV_N_SEVERE_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_CONTR_DISCRIMINATION_DIV_N_SEVERE_COV"
+   ],
+   "note": ""
+  },
+  "FUND_DIVERSITY_PROGRAMS_M": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_DIVERSITY_PROGRAMS_M"
+   ],
+   "note": ""
+  },
+  "FUND_HUMAN_CAPITAL_DEV_MGMT_SCORE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_HUMAN_CAPITAL_DEV_MGMT_SCORE"
+   ],
+   "note": ""
+  },
+  "FUND_HUMAN_CAPITAL_DEV_MGMT_SCORE_COVERAGE": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_HUMAN_CAPITAL_DEV_MGMT_SCORE_COVERAGE"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_VIOLATIONS_UNGC_OECD": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_VIOLATIONS_UNGC_OECD"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_VIOLATIONS_UNGC_OECD_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_VIOLATIONS_UNGC_OECD_COV"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_MECH_UN_GLOBAL_COMPACT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_MECH_UN_GLOBAL_COMPACT"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_MECH_UN_GLOBAL_COMPACT_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_MECH_UN_GLOBAL_COMPACT_COV"
+   ],
+   "note": ""
+  },
+  "FUND_CONTR_HEALTH_SAFETY_M": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CONTR_HEALTH_SAFETY_M"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_TRIR": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_TRIR"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_TRIR_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_TRIR_COV"
+   ],
+   "note": ""
+  },
+  "FUND_CONTR_CONTROVERSIAL_WORKPLACE_M": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_CONTR_CONTROVERSIAL_WORKPLACE_M"
+   ],
+   "note": ""
+  },
+  "FUND_BOARD_INDEP_0_25PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_BOARD_INDEP_0_25PCT"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_FEMALE_DIRECTORS_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_FEMALE_DIRECTORS_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_OWNERSHIP_FLAG_PCT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_OWNERSHIP_FLAG_PCT"
+   ],
+   "note": ""
+  },
+  "FUND_PAY_CONTROVERSY": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_PAY_CONTROVERSY"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_CORR_BRIB_CONVICTIONS_COUNT": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_CORR_BRIB_CONVICTIONS_COUNT"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_CORR_BRIB_POLICY_UN": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_CORR_BRIB_POLICY_UN"
+   ],
+   "note": ""
+  },
+  "FUND_SFDR_CORR_BRIB_POLICY_UN_COV": {
+   "kind": "msci",
+   "candidates": [
+    "FUND_SFDR_CORR_BRIB_POLICY_UN_COV"
+   ],
+   "note": ""
+  }
+ }
+}

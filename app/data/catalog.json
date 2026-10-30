@@ -1,0 +1,1374 @@
+{
+"FEMALE_DIRECTORS_PCT": {
+"name": "Female Directors Percentage",
+"description": "The percentage of board members who are female. For companies with a two-tier board, the calculation is based on members of the Supervisory Board only.",
+"units": "%",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"CARBON_EMISSIONS_EVIC_SCOPE_12_INTEN": {
+"name": "Carbon emissions - Scope 1+2 EVIC intensity (tVO2e/USD million)",
+"description": "Reported or estimated Scope 1+2 greenhouse gas emissions (expressed in tCO2e) normalized by enterprise value including cash (USD million). This ratio facilitates portfolio analysis by allocating emissions across equity and debt.",
+"units": "tCO2e/USD million",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"CARBON_EMISSIONS_SCOPE_12_INTEN": {
+"name": "Carbon emissions - Scope 1+2 revenue intensity (tCO2e/USD million)",
+"description": "Reported or estimated Scope 1+2 greenhouse gas emissions (expressed in tCO2e) normalized by company sales (USD million). This ratio facilitates comparison between companies of different sizes.",
+"units": "tCO2e/USD million",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"HAS_SBTI_APPROVED_TARGET": {
+"name": "Company has Science-Based approved Emission Target (SBTI)",
+"description": "Flagged as \"T\" if the company has one or more active carbon emissions reduction target/s approved by the Science Based Targets initiative (SBTi).",
+"units": "boolean (true, false)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"HUMAN_CAPITAL_DEV_MGMT_SCORE": {
+"name": "Human Capital Development Management Score",
+"description": "Management indicators measure how well a company manages ESG risk and opportunities. These metrics are grouped into the following broad categories: Strategies & Policies, Targets & Implementation, and Demonstrated Performance. Higher scores on management indicate greater capacity to manage risk. See the IVA Methodology for details. (Score: 0-10)",
+"units": "score (0-10)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"PAY_CONTROVERSY": {
+"name": "Pay Controversy",
+"description": "Have the company’s pay policies or practices attracted adverse public comment from stakeholders (including shareholders, government, regulators etc)? Flagged if yes. The duration of the flag is dependent on the severity assessment.",
+"units": "flag (0,1)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"IVA_COMPANY_RATING": {
+"name": "ESG Rating",
+"description": "A company’s final ESG Rating. To arrive at a final letter rating, the weighted average of the key issue scores are aggregated and companies are ranked from best (AAA) to worst (CCC).",
+"units": "text",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"IVA_RATING_DATE": {
+"name": "ESG Rating Date",
+"description": "Date of which the ESG Rating was published.",
+"units": "date (yyyymmdd)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"IVA_RATING_TREND": {
+"name": "ESG Rating Trend",
+"description": "The ESG Rating Trend indicates the rating change from previous to current in terms of the number of rating notches downgraded or upgraded. For example; +3 = three notch upgrade, -2 = two notch downgrade, 0 = maintain, and blank = new rating.",
+"units": "trend (-6 to +6)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"INDUSTRY_ADJUSTED_SCORE": {
+"name": "Final Industry-Adjusted Company Score",
+"description": "The score is calculated by normalizing the Weighted Average Key Issue Score to the Industry peer set, adjusted to reflect any Ratings Review Committee overrides; see the ESG Rating Methodology document for details.",
+"units": "score (0-10)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"ENVIRONMENTAL_PILLAR_SCORE": {
+"name": "Environmental Pillar Score",
+"description": "The Environmental Pillar Score represents the weighted average of all Key Issues that fall under the Environment Pillar.",
+"units": "score (0-10)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"ENVIRONMENTAL_PILLAR_WEIGHT": {
+"name": "Environmental Pillar Weight",
+"description": "The Environmental Pillar Weight represents the sum of the weights of all Key Issues that fall under the Environment Pillar.",
+"units": "%",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"GOVERNANCE_PILLAR_SCORE": {
+"name": "Governance Pillar Score",
+"description": "The Governance Pillar Score provides an assessment of risk and management practices related to Corporate Governance and Corporate Behavior. The 0-10 score is based on the sum of deductions derived from Key Metrics included in the Corporate Governance (including Board, Pay, Ownership & Control, and Accounting) and Corporate Behavior (including Business Ethics and Tax Transparency) themes. Low score",
+"units": "score (0-10)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"GOVERNANCE_PILLAR_WEIGHT": {
+"name": "Governance Pillar Weight",
+"description": "The Governance Pillar Weight represents the sum of the weights of all Key Issues that fall under the Governance Pillar.",
+"units": "%",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"SOCIAL_PILLAR_SCORE": {
+"name": "Social Pillar Score",
+"description": "The Social Pillar Score represents the weighted average of all Key Issues that fall under the Social Pillar.",
+"units": "score (0-10)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"SOCIAL_PILLAR_WEIGHT": {
+"name": "Social Pillar Weight",
+"description": "The Social Pillar Weight represents the sum of the weights of all Key Issues that fall under the Social Pillar.",
+"units": "%",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"OWNERSHIP_AND_CONTROL_SCORE": {
+"name": "Ownership & Control 0-10 Score",
+"description": "This is an absolute score for Ownership and Control, one of the four sub-themes used in our corporate governance scoring model. The scale is 0 (worst) to 10 (best).",
+"units": "score (0-10)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"CONTR_CONTROVERSIAL_WORKPLACE_M": {
+"name": "Controversial Workplace Accidents Controversies (Yes, No)",
+"description": "Flagged as \"Yes\" if company has faced significant recent controversy or criticism regarding employee health & safety.",
+"units": "text",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"CBN_RENEW_ENER_USE_M": {
+"name": "Uses energy from renewable sources (Yes, No)",
+"description": "Flagged as \"Yes\" if company uses energy from renewable sources.",
+"units": "text",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"CARBON_SCOPE_12_INTEN_3Y_TREND_NM": {
+"name": "Three-year trend of average carbon emissions intensity (-1, 0, 1)",
+"description": "Flagged as \"1\" if the company's three-year average carbon emissions intensity is reducing at a rate of 5%. Flagged as \"0\" if trend is stable at a rate between -5% and 5% or if carbon emissions are estimated or does not have multi-year time series data. Flagged as \"-1\" if the carbon emissions intensity trend is increasing at a rate 5% or worst.",
+"units": "flag (-1, 0, 1)",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"CONTR_HEALTH_SAFETY_M": {
+"name": "Health & Safety Controversies (Yes, No)",
+"description": "Flagged as \"Yes\" if company has faced significant recent controversy or criticism regarding working conditions in its core operations.",
+"units": "text",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"DIVERSITY_PROGRAMS_M": {
+"name": "Programs to facilitate workforce diversity (Yes, No)",
+"description": "Flagged as \"Yes\" if company has programs to facilitate workforce diversity (gender, religion, ethnic background, etc.).",
+"units": "text",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"CONTR_BRIB_CORRUPT_N_SEVERE": {
+"name": "Number of Severe and Very Severe Bribery and Corruption  Controversies",
+"description": "Number of Severe and Very Severe controversy cases in the last three years related to: Bribery & corruption issues.",
+"units": "count",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"BOARD_INDEP_OTHER_INTERESTS_PCT": {
+"name": "Board Independent of Other Interests Percentage",
+"description": "The percentage of board members that meets our independent of other interests criteria (e.g., Significant Owners, Government, Employees), as defined by MSCI ESG Research.",
+"units": "%",
+"product": "MSCI ESG Ratings for Global Equities",
+"type": "issuer"
+},
+"UNGC_COMPLIANCE": {
+"name": "Global Compact Compliance",
+"description": "This factor indicates whether the company is in compliance with the United Nations Global Compact principles. The possible values are Fail, Watch List, or Pass. See the ESG Controversies and Global Norms methodology document for detailed explanations.",
+"units": "text",
+"product": "MSCI ESG Controversies and Global Norms Screening",
+"type": "issuer"
+},
+"OVERALL_FLAG": {
+"name": "Company Summary - Overall Flag",
+"description": "The overall company assessment signals whether a company has a notable controversy related to a company’s operations and/or products, and the severity of the social or environmental impact of the controversy.",
+"units": "text",
+"product": "MSCI ESG Controversies and Global Norms Screening",
+"type": "issuer"
+},
+"LABOR_RIGHTS_EMP_HS_FLAG": {
+"name": "Labor Rights - Employee Health & Safety Flag",
+"description": "This indicator measures the severity of controversies related to the safety of a firm’s employees. Factors affecting this evaluation include, but are not limited to, a history of involvement in workplace safety-related legal cases, widespread or egregious fines for unsafe workplace practices, resistance to improved practices, and criticism by NGOs and/or other third-party observers.",
+"units": "text",
+"product": "MSCI ESG Controversies and Global Norms Screening",
+"type": "issuer"
+},
+"LABOR_RIGHTS_DIVERSITY_FLAG": {
+"name": "Labor Rights - Discrimination & Workforce Diversity Flag",
+"description": "This indicator measures the severity of controversies related to a firm’s workforce diversity. Factors affecting this evaluation include, but are not limited to, a history of involvement in discrimination-related legal cases, widespread or egregious instances of discrimination on the basis of sex, race, or ethnicity, resistance to improved practices, and criticism by NGOs and/or other third-party ",
+"units": "text",
+"product": "MSCI ESG Controversies and Global Norms Screening",
+"type": "issuer"
+},
+"LABOR_RIGHTS_CONTROVERSY_FLAG": {
+"name": "Labor Rights - Controversy Flag",
+"description": "This ESG pillar is an assessment of controversies (if any) related to a firm’s employee relations and supply chain. Factors affecting this evaluation include whether a company is involved in controversies related to labor-management relations, employee health & safety, collective bargaining & unions, discrimination and workforce diversity, and management of supply chain employee relations standard",
+"units": "text",
+"product": "MSCI ESG Controversies and Global Norms Screening",
+"type": "issuer"
+},
+"ENVIRONMENT_CONTROVERSY_SCORE": {
+"name": "Environment - Controversy Score",
+"description": "This ESG pillar is an assessment of controversies (if any) related to a firm’s impact on the environment. Factors affecting this evaluation include whether a company is involved in controversies related to land use and biodiversity, toxic spills and releases, energy and climate change, water management, operational non-hazardous waste, and management of supply chain environmental impact.",
+"units": "score (0-10)",
+"product": "MSCI ESG Controversies and Global Norms Screening",
+"type": "issuer"
+},
+"ENVIRONMENT_CONTROVERSY_FLAG": {
+"name": "Environment - Controversy Flag",
+"description": "This ESG pillar is an assessment of controversies (if any) related to a firm’s impact on the environment. Factors affecting this evaluation include whether a company is involved in controversies related to land use and biodiversity, toxic spills and releases, energy and climate change, water management, operational non-hazardous waste, environmental impact of products and service, and management o",
+"units": "text",
+"product": "MSCI ESG Controversies and Global Norms Screening",
+"type": "issuer"
+},
+"ISSUER_CNTRY_DOMICILE": {
+"name": "Issuer Country of Domicile",
+"description": "Issuer Country of Domicile. System factor",
+"units": "text",
+"product": "MSCI Sustainable Impact Metrics and SDG Alignment",
+"type": "issuer"
+},
+"SI_TOTAL_MAX_REV": {
+"name": "Social Impact Solutions - Maximum Percentage of Revenue",
+"description": "This field represents the total of all revenues derived from any of the seven social impact themes including nutrition, sanitation, major diseases treatment, SME finance, education, affordable real estate or connectivity.",
+"units": "score",
+"product": "MSCI Sustainable Impact Metrics and SDG Alignment",
+"type": "issuer"
+},
+"SI_SUST_IMPACT_MAX_REV": {
+"name": "Sustainable Impact Solutions - Maximum Percentage of Revenue",
+"description": "This field represents the total of all revenues derived from any of the thirteeen social and environmental impact themes including nutrition, sanitation, major diseases treatment, SME finance, education or affordable real estate, alternative energy, energy efficiency, green building, pollution prevention and sustainable water. Overlapping scores may occur in certain themes.",
+"units": "count",
+"product": "MSCI Sustainable Impact Metrics and SDG Alignment",
+"type": "issuer"
+},
+"CT_ALT_ENERGY_MAX_REV": {
+"name": "Alternative Energy - Maximum Percentage of Revenue",
+"description": "The recent-year percentage of revenue, or maximum estimated percent, a company has derived from products, services, or infrastructure projects supporting the development or delivery of renewable energy and alternative fuels.",
+"units": "%",
+"product": "MSCI Sustainable Impact Metrics and SDG Alignment",
+"type": "issuer"
+},
+"CT_ENERGY_EFF_MAX_REV": {
+"name": "Energy Efficiency - Maximum Percentage of Revenue",
+"description": "The recent-year percentage of revenue, or maximum estimated percent, a company has derived from products, services, infrastructure, or technologies that proactively address the growing global demand for energy while minimizing impacts to the environment.",
+"units": "%",
+"product": "MSCI Sustainable Impact Metrics and SDG Alignment",
+"type": "issuer"
+},
+"CT_TOTAL_MAX_REV": {
+"name": "Environmental Impact Solutions - Maximum Percentage of Revenue",
+"description": "This field represents the total of all revenues derived from any of the six environmental impact themes including alternative energy, energy efficiency, green building, pollution prevention, sustainable water, or sustainable agriculture.",
+"units": "%",
+"product": "MSCI Sustainable Impact Metrics and SDG Alignment",
+"type": "issuer"
+},
+"CWEAP_TIE": {
+"name": "Controversial Weapons - Any Tie",
+"description": "Companies that have any ties to cluster munitions, landmines, biological / chemical weapons, depleted uranium weapons, blinding laser weapons, incendiary weapons, and/or non-detectable fragments.",
+"units": "boolean (true, false)",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"EST_EU_TAXONOMY_MAX_REV": {
+"name": "Estimated EU Taxonomy Alignment - Maximum Percentage of Revenue",
+"description": "Estimated EU Taxonomy Alignment - Maximum Percentage of Revenue indicates a company’s estimated maximum percent of revenue from products and services addressing environmental objectives, based on the MSCI Sustainable Impact Metrics framework. Companies with Red and Orange Flag environmental controversies, and Red Flag social and governance controversies are excluded from the list as failing to mee",
+"units": "count",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"TOB_DIST_MAX_REV_PCT": {
+"name": "Tobacco Distributor - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from the distribution of tobacco products.",
+"units": "%",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"TOB_RET_MAX_REV_PCT": {
+"name": "Tobacco Retailer - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from retail sales of tobacco products.",
+"units": "%",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"TOB_SUPP_MAX_REV_PCT": {
+"name": "Tobacco Supplier - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from supplying products essential to the tobacco industry.",
+"units": "%",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"TRIR": {
+"name": "Total Recordable Incident Rate",
+"description": "Total recordable incident rate (TRIR) per million hours worked. The TRIR includes fatalities, lost time injuries, restricted work injuries and medical treatment injuries",
+"units": "count",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"CORR_BRIB_POLICY_UN": {
+"name": "Policy on anti-corruption and anti-bribery (UN Convention against Corruption)",
+"description": "Company has an anti-corruption and anti-bribery policy consistent with the United Nations Convention against Corruption.",
+"units": "text",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"GENDER_PAY_GAP_RATIO": {
+"name": "Gender pay gap ratio",
+"description": "The difference between the average gross hourly earnings of male and female employees as a percentage of male gross earnings. Note that reporting on this metric is inconsistent: some companies report on the absolute or uncontrolled pay gap while others control for compensable factors such as role or location.",
+"units": "count",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"ACTIVE_FF_SECTOR_EXPOSURE": {
+"name": "Active Fossil Fuel Sector Exposure",
+"description": "Company’s exposure to fossil fuels related activities, including extraction, processing, storage and transportation of petroleum products, natural gas, and thermal and metallurgical coal.",
+"units": "text",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"CONTRO_WEAP_CBLMBW_ANYTIE": {
+"name": "Exposure to controversial weapons (landmines, cluster munitions, chemical weapons and biological weapons)",
+"description": "Company has an industry tie to landmines, cluster munitions, chemical weapons or biological weapons. Note: industry tie includes ownership, manufacture or investment. Landmines do not include related safety products.",
+"units": "text",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"MECH_UN_GLOBAL_COMPACT": {
+"name": "Mechanism to monitor compliance with UN Global Compact",
+"description": "The company is a signatory to the UN Global Compact and is required to monitor and report compliance with the UN Global Compact principles.",
+"units": "text",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"PCT_NONRENEW_CONSUMP_PROD": {
+"name": "Percentage of non-renewable energy consumption and production",
+"description": "The company's energy consumption and/or production from non-renewable sources as a percentage of total energy use and/or generation",
+"units": "count",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"OPS_PROT_BIODIV_CONTROVS": {
+"name": "Company has operations located in biodiversity sensitive areas and is involved in controversies with severe impact on the environment",
+"description": "Company reports having operations in or near to biodiversity sensitive areas and has been implicated in controversies with severe or very severe adverse impact on the environment",
+"units": "text",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"CARBON_EMISSIONS_SALES_EUR_SCOPE123_INTEN": {
+"name": "Total GHG Emissions Intensity per EUR million Sales (t/EUR million sales)",
+"description": "This factor indicates the most recent aggregate GHG emissions of the company (Scopes 1 and 2, and estimated Scope 3 emissions) relative to its most recent Sales in million Euro.",
+"units": "tCO2e",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"ALC_MAX_REV": {
+"name": "Alcohol - Maximum Percentage of Revenue",
+"description": "The recent-year percentage of revenue, or maximum estimated percent, a company has derived from manufacturing, distributing, retailing, licensing, and supplying alcoholic products.",
+"units": "%",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"PALM_TOTAL_MAX_REV_PCT": {
+"name": "Palm Oil - Maximum Percentage of Revenue",
+"description": "The recent-year percentage of revenue, or maximum estimated percent, a company has derived from the production or distribution of Palm Oil.",
+"units": "%",
+"product": "MSCI EU Sustainable Finance Module",
+"type": "issuer"
+},
+"AE_DIST_MAX_REV_PCT": {
+"name": "Adult Entertainment Distributor - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from distributing sexually explicit products and services, including X-rated movies and videos, printed materials, television programs, and online products.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"AE_PROD_MAX_REV_PCT": {
+"name": "Adult Entertainment Producer - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from producing, directing, or publishing adult entertainment materials that fall into the following categories: Producer of X-rated films, Producer of Pay-per-view programming or channels, Producer of sexually explicit video games, Producer of books or magazines with adult content, Live entertainment of an adul",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"AE_RET_MAX_REV_PCT": {
+"name": "Adult Entertainment Retailer - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from the retail sale of adult entertainment products through specialty stores or online sites.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"AE_OWN_BY": {
+"name": "Adult Entertainment - Ownership by an Adult Entertainment Company",
+"description": "Companies that are 50 percent or more owned by a company with involvement.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"AE_OWN_OF": {
+"name": "Adult Entertainment - Ownership of an Adult Entertainment Company",
+"description": "Companies that own 20 to 49.99 percent of a company with involvement. When a company owns 50 percent or more of a subsidiary with involvement, MSCI treats it as a consolidated subsidiary.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"SRI_CRITERIA": {
+"name": "Standard: Fails SRI Index Criteria",
+"description": "Companies that fail Standard SRI Index Investment criteria in Alcohol, Civilian Firearms, Gambling, Weapons, Cluster Bombs, Landmines, Nuclear Power and Tobacco.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"TOB_MAX_REV_PCT": {
+"name": "Tobacco Total - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from tobacco-related business activities.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"GAM_OWN_BY": {
+"name": "Gambling - Ownership by a Gambling Company",
+"description": "Companies that are 50 percent or more owned by a company with involvement.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"GAM_OWN_OF": {
+"name": "Gambling - Ownership of a Gambling Company",
+"description": "Companies that own 20 to 49.99 percent of a company with involvement. When a company owns 50 percent or more of a subsidiary with involvement, MSCI treats it as a consolidated subsidiary.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"TOB_PROD_MAX_REV_PCT": {
+"name": "Tobacco Producer - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from the manufacture of tobacco products.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"TOB_OWN_BY": {
+"name": "Tobacco Total - Ownership by a Tobacco Company",
+"description": "Companies that are 50 percent or more owned by a company with involvement.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"TOB_OWN_OF": {
+"name": "Tobacco Total - Ownership of a Tobacco Company",
+"description": "Companies that own 20 to 49.99 percent of a company with involvement. When a company owns 50 percent or more of a subsidiary with involvement, MSCI treats it as a consolidated subsidiary.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"GAM_LICEN_MAX_REV_PCT": {
+"name": "Gambling Licensor  - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from licensing its company name or brand name to gambling products.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"GAM_SUPPOR_MAX_REV_PCT": {
+"name": "Gambling Support - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from providing key products or services fundamental to gambling operations, including: slot machines, roulette wheels, or lottery terminals; gambling technology and support such as IT maintenance, software design, security or surveillance systems, and lottery ticket printing; and, gambling-related services such",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"GAM_OPER_MAX_REV_PCT": {
+"name": "Gambling Operations - Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from ownership or operation gambling facilities such as casinos, racetracks, bingo parlors, or other betting establishments, including: horse, dog, or other racing events that permit wagering; lottery operations; online gambling; pari-mutuel wagering facilities; bingo; pachislot and pachinko parlors; slot machi",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"CB_TIE": {
+"name": "Cluster Munitions - Any Tie",
+"description": "Companies with any industry tie to cluster munitions.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"LM_TIE": {
+"name": "Landmines - Any Tie",
+"description": "Companies that have any industry tie to the manufacture of landmines except for Safety, which is a positive indicator.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"THERMAL_COAL_RESERVES": {
+"name": "Evidence of Thermal Coal Reserves",
+"description": "This field identifies companies that provide evidence of owning thermal coal including those that own less than 50% of a reserves field. Evidence of owning reserves includes companies providing the exact volume of reserves, and companies making a statement about their ownership of reserves. Thermal coal is used to fire power plants that produce steam for electricity and industrial uses.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"THERMAL_COAL_MAX_REV_PCT": {
+"name": "Thermal Coal - Maximum Percentage of Revenue",
+"description": "This factor identifies the maximum percentage of revenue (either reported or estimated) greater than 0% that a company derives from the mining of thermal coal (including lignite, bituminous, anthracite and steam coal) and its sale to external parties. It excludes: revenue from metallurgical coal; coal mined for internal power generation (e.g. in the case of vertically integrated power producers); ",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"WEAP_BIO_CHEM_MAX_REV_PCT": {
+"name": "Weapons - Bio/chem Maximum Percentage of Revenue",
+"description": "The recent-year percent of revenue, or maximum estimated percent, a company has derived from the manufacture of chemical or biological weapons and related systems or components.",
+"units": null,
+"product": "MSCI Business Involvement Screening Research – All Screens",
+"type": "issuer"
+},
+"CARBON_GOVERNMENT_CO2_INTENSITY_GDP_TONPERMN": {
+"name": "CO2 intensity (t/USD million GDP nominal)",
+"description": "This data point represents CO2 intensity of an economy (in tons per USD million GDP nominal). The higher the value the more carbon intensive the economy is. It considers CO2 emission related to fossil fuel use and industrial processes (e.g. cement production etc.). (Sources: EDGAR, WDI).",
+"units": "tCO2e/USD million",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"CBN_LCT_CATEGORY": {
+"name": "Low Carbon Transition Category",
+"description": "This classification scheme assigns a Low Carbon Transition Category to a company based on its exposure to low carbon transition risks and opportunities. The category assignment is based on the size and nature of the company's current emissions profile and can be adjusted if the company's Low Carbon Transition Management Score is in the top or second quartile of its peer set. The categories are: As",
+"units": "text (asset stranding, product transition, operational transition, neutral, solutions)",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"CBN_LCT_SCORE": {
+"name": "Low Carbon Transition Score",
+"description": "A company level score that measures a company’s level of alignment to the Low Carbon Transition. Companies with higher Low Carbon Transition score are more aligned with the Low Carbon Transition compared to the companies with lower scores. (Score: 0-10)",
+"units": "score (0-10)",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"FOSSIL_FUEL_RESERVES": {
+"name": "Fossil Fuel Reserves",
+"description": "This field identifies companies with evidence of owning fossil fuel reserves regardless of their industries, including companies that own less than 50% of a reserves field. Fossil reserves are defined as proved and probable reserves (i.e. 1P and 2P) for coal and proved reserves (i.e. 1P) for oil and natural gas. Evidence of owning reserves includes companies providing the exact volume of reserves,",
+"units": "boolean (true, false)",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"OIL_GAS_ANY_TIE": {
+"name": "Oil and Gas - Any Tie",
+"description": "Companies with an industry tie to oil and gas, in particular reserve ownership, oil and gas related revenues and power generation. It does not flag companies generating revenues from biofuels.",
+"units": "boolean (true, false)",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"OIL_SANDS_RESERVES": {
+"name": "Evidence of Oil Shale & Tar Sands Reserves",
+"description": "This field identifies companies that provide evidence of owning oil sands reserves, including those that own less than 50% of a reserves field. Evidence of owning reserves includes companies providing the exact volume of reserves, and companies making a statement about their ownership of reserves.",
+"units": "boolean (true, false)",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"SHALE_GAS_RESERVES": {
+"name": "Evidence of Shale Gas Reserves",
+"description": "This field identifies companies that provide evidence of owning shale gas reserves, including those that own less than 50% of a reserves field. Evidence of owning reserves includes companies providing the exact volume of reserves, and companies making a statement about their ownership of reserves.",
+"units": "boolean (true, false)",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"THERMAL_COAL_INVOLVEMENT_ANYPCT": {
+"name": "Thermal Coal - Involvement - 0%",
+"description": "Companies that derive some annual revenues (>0%) from thermal coal.",
+"units": "boolean (true, false)",
+"product": "MSCI Climate Change Metrics",
+"type": "issuer"
+},
+"FUND_AE_MODER_RESTRICT_PCT": {
+"name": "Fund Adult Entertainment Involvement - Moderately Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in adult entertainment according to our Moderately Restrictive screen definition. This includes adult entertainment producers that derive => 5% of revenue and retailers and distributors if the total revenue is => 15%. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_WEAP_BIO_CHEM_TIE_PCT": {
+"name": "Fund Biological-Chemical Weapons Involvement (%)",
+"description": "The percentage of portfolio's market value exposed to companies with ties to biological-chemical weapons, including bio/chem weapons systems and components. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CM_TIE_PCT": {
+"name": "Fund Cluster Munitions Involvement (%)",
+"description": "The percentage of portfolio's market value exposed to companies with ties to cluster munitions, including investor, manufacturer, and ownership categories. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CONTR_WEAP_TIE_PCT": {
+"name": "Fund Controversial Weapons Involvement (%)",
+"description": "The percentage of portfolio's market value exposed to companies with ties to cluster munitions, landmines, biological / chemical weapons, depleted uranium weapons, blinding laser weapons, incendiary weapons, and/or non-detectable fragments.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CONTR_CONTROVERSIAL_WORKPLACE_M": {
+"name": "Fund Controversial Workplace Accidents Controversies (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Yes\" if company has faced significant recent controversy or criticism regarding employee health & safety. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_FOSSIL_FUEL_RESERVES_PCT": {
+"name": "Fund Fossil Fuel Reserves (%)",
+"description": "The percentage of portfolio's market value exposed to companies that own fossil fuel reserves.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_GAM_MODER_RESTRICT_PCT": {
+"name": "Fund Gambling Involvement - Moderately Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in gambling according to our Moderately Restrictive screen definition. This includes gambling facility operators that derive => 5% of revenue and support products & services if the revenue is => 15%. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_UNGC_COMPLIANCE_VIOLATION_PCT": {
+"name": "Fund Global Compact Compliance Violation (%)",
+"description": "The percentage of portfolio's market value exposed to companies in violation of the UN Global Compact principles.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CONTR_HEALTH_SAFETY_M": {
+"name": "Fund Health & Safety Controversies (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Yes\" if company has faced significant recent controversy or criticism regarding working conditions in its core operations. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_HIGH_IMPACT_FOSSIL_FUEL_RESERVES_PCT": {
+"name": "Fund High Impact Fossil Fuel Reserves (%)",
+"description": "% of portfolio’s market value exposed to companies that own high impact fossil fuel reserves. High impact fossil fuel reserves include Thermal Coal, Oil Sands, and Shale Oil and Shale Gas.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LM_TIE_PCT": {
+"name": "Fund Landmines Involvement (%)",
+"description": "The percentage of portfolio's market value exposed to companies with ties to landmines, including anti-personnel landmines whole weapons systems manufacturer; and intended & dual use components. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_PALM_TIE_PCT": {
+"name": "Fund Palm Oil Involvement (%)",
+"description": "The percentage of portfolio's market value exposed to companies with ties to palm oil, including production, distribution, and ownership categories. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_PALM_HIGH_RESTRICT_PCT": {
+"name": "Fund Palm Oil Involvement - Highly Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in palm oil according to our Highly Restrictive screen definition. This includes palm oil producers, and distributors that derive => 5% of revenue. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_PALM_MODER_RESTRICT_PCT": {
+"name": "Fund Palm Oil Involvement - Moderately Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in palm oil according to our Moderately Restrictive screen definition. This includes palm oil producers that derive => 5% of revenue and distributors that derive => 15%. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SRI_EXCLUSION_CRITERIA_PCT": {
+"name": "Fund SRI Exclusion Criteria (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for one or more standard SRI exclusion factors (alcohol, civilian firearms, gambling, weapons, cluster bombs, landmines, nuclear power, GMOs, and tobacco).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ENVIRONMENT_CONTROVERSY_PCT": {
+"name": "Fund Severe Environmental Controversies (%)",
+"description": "The percentage of portfolio's market value exposed to companies facing one or more Severe or Very Severe Environmental controversies related to Energy & Climate Change, Land Use & Biodiversity, Toxic Spills & Releases, Water Stress, or Operational Waste.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LABOR_RIGHTS_CONTROVERSY_PCT": {
+"name": "Fund Severe Labor Controversies (%)",
+"description": "The percentage of portfolio's market value exposed to companies facing one or more Severe or Very Severe Labor controversies related to Child Labor, Collective Bargaining, Discrimination, Health & Safety, Labor Management, or Supply Chain Labor Standards.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_THERMAL_COAL_TIE_PCT": {
+"name": "Fund Thermal Coal Involvement (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in thermal coal. This factor identifies the maximum percentage of revenue (either reported or estimated) greater than 0% that a company derives from the mining of thermal coal (including lignite, bituminous, anthracite and steam coal) and its sale to external parties. It excludes: revenue from metallurgical coa",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_THERMAL_COAL_HIGH_RESTRICT_PCT": {
+"name": "Fund Thermal Coal Involvement - Highly Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in thermal coal according to our Highly Restrictive screen definition. This factor identifies the maximum percentage of revenue (either reported or estimated) => 10% that a company derives from the mining of thermal coal (including lignite, bituminous, anthracite and steam coal) and its sale to external parties",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_THERMAL_COAL_MODER_RESTRICT_PCT": {
+"name": "Fund Thermal Coal Involvement - Moderately Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in thermal coal according to our Moderately Restrictive screen definition. This factor identifies the maximum percentage of revenue (either reported or estimated) => 30% that a company derives from the mining of thermal coal (including lignite, bituminous, anthracite and steam coal) and its sale to external par",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_THERMAL_COAL_RESERVES": {
+"name": "Fund Thermal Coal Reserves (%)",
+"description": "The percentage of portfolio's market value exposed to companies that provide evidence of owning thermal coal including those that own less than 50% of a reserves field. Evidence of owning reserves includes companies providing the exact volume of reserves, and companies making a statement about their ownership of reserves. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_TOB_TIE_PCT": {
+"name": "Fund Tobacco Involvement (%)",
+"description": "The percentage of portfolio's market value exposed to companies with tie to tobacco products through the distributor, licensor, retailer, supplier, or ownership categories.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_TOB_HIGH_RESTRICT_PCT": {
+"name": "Fund Tobacco Involvement - Highly Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in tobacco according to our Highly Restrictive screen definition. This includes all tobacco producers as well as tobacco distributors, suppliers, and retailers if the combined revenue is => 5%. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_TOB_MODER_RESTRICT_PCT": {
+"name": "Fund Tobacco Involvement - Moderately Restrictive (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged for involvement in tobacco according to our Moderately Restrictive screen definition. This includes tobacco producers that derive => 5% of revenue and tobacco retailers, suppliers, and distributors if the combined revenue => 15%. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_VERY_SEVERE_ENV_CONTROVERSY_PCT": {
+"name": "Fund Very Severe Environmental Controversies (%)",
+"description": "The percentage of portfolio's market value exposed to companies facing one or more Very Severe Environmental controversies related to Energy & Climate Change, Land Use & Biodiversity, Toxic Spills & Releases, Water Stress, or Operational Waste.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_IMPROV": {
+"name": "Fund \"improving\" company's three-year average carbon emissions intensity trend (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Improving\" if the company's three-year average carbon emissions intensity is reducing at a rate of 5%. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_NON_DETER": {
+"name": "Fund \"not determinable\" company's three-year average carbon emissions intensity trend (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as “Not Determinable” if carbon emissions are estimated or does not have multi-year time series data. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_STABLE": {
+"name": "Fund \"stable\" company's three-year average carbon emissions intensity trend (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Stable\" if trend is stable at a rate between -5% and 5%. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CARBON_SCOPE_12_INTEN_3Y_TREND_M_WORSE": {
+"name": "Fund \"worsening\" company's three-year average carbon emissions intensity trend (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Worsening\" if the carbon emissions intensity trend is increasing at a rate 5% or worst. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_BOARD_INDEP_0_25PCT": {
+"name": "Fund Board Independence (0-25%)",
+"description": "The percentage of portfolio's market value exposed to companies with <= 25% board independence.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_HUMAN_CAPITAL_DEV_MGMT_SCORE": {
+"name": "Fund Human Capital Development Management Score",
+"description": "A fund’s Human Capital Development Management Score measures holdings’ management of ESG risk and opportunities.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_HUMAN_CAPITAL_DEV_MGMT_SCORE_COVERAGE": {
+"name": "Fund Human Capital Development Management Score Coverage (%)",
+"description": "The Human Capital Development Management Score Coverage (%) represents the sum of weight of issuers in the fund with human capital mananagement scores. The score measures companies' ability to attract retain and develop human capital.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LCT_CAT_ASSET_STRAND_PCT": {
+"name": "Fund Low Carbon Transition Category - Asset Stranding (%)",
+"description": "The percentage of portfolio's market value with a Low Carbon Transition Category of Asset Stranding.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LCT_CAT_NEUTRAL_PCT": {
+"name": "Fund Low Carbon Transition Category - Neutral (%)",
+"description": "The percentage of portfolio's market value with a Low Carbon Transition Category of Neutral.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LCT_CAT_OPERAT_TRANSITION_PCT": {
+"name": "Fund Low Carbon Transition Category - Operational Transition (%)",
+"description": "The percentage of portfolio's market value with a Low Carbon Transition Category of Operational Transition.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LCT_CAT_PRODUCT_TRANSITION_PCT": {
+"name": "Fund Low Carbon Transition Category - Product Transition (%)",
+"description": "The percentage of portfolio's market value with a Low Carbon Transition Category of Product Transition.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LCT_CAT_SOLUTIONS_PCT": {
+"name": "Fund Low Carbon Transition Category - Solutions (%)",
+"description": "The percentage of portfolio's market value with a Low Carbon Transition Category of Solutions.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LOW_CARBON_TRANSITION": {
+"name": "Fund Low Carbon Transition Score",
+"description": "The Fund Low Carbon Transition Score measures the alignment of underlying holdings to the Low Carbon Transition.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_LOW_CARBON_TRANS_SCORE_COVERAGE": {
+"name": "Fund Low Carbon Transition Score Coverage (%)",
+"description": "The Low Carbon Transition Score Coverage (%) represents the sum of the weight of the issuers in the fund with low carbon transition scores. The score evaluates companies alignment to the low carbon transition based on its exposure to low carbon transition risks and opportunities.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_OWNERSHIP_FLAG_PCT": {
+"name": "Fund Ownership and Control Flag (%)",
+"description": "The percentage of portfolio's market value exposed to companies ranking \"below average\" relative to global peers on MSCI's assessment of ownership structure and risks.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_PAY_CONTROVERSY": {
+"name": "Fund pay controversy (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Yes\" if company’s pay policies or practices attracted adverse public comment from stakeholders (including shareholders, government, regulators etc). The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_DIVERSITY_PROGRAMS_M": {
+"name": "Fund programs to facilitate workforce diversity (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Yes\" if company has programs to facilitate workforce diversity (gender, religion, ethnic background, etc.). The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CBN_RENEW_ENER_USE_M": {
+"name": "Fund uses energy from renewable sources (%)",
+"description": "The percentage of portfolio's market value exposed to companies flagged as \"Yes\" if company uses energy from renewable sources. The full weight of each flagged company is included in the calculation.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_TREND_NEGATIVE_PCT": {
+"name": "Fund  ESG Trend Negative (%)",
+"description": "The percentage of portfolio's market value with a negative ESG rating trend (downgrade) in the year prior to the most recent ESG rating.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_COVERAGE": {
+"name": "Fund ESG Coverage (%)",
+"description": "Percent by weight of a fund's holdings that have ESG Data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_COVERAGE_OVERALL": {
+"name": "Fund ESG Coverage Overall  (%)",
+"description": "Percent by weight of a fund's holdings that have ESG Data. Cash is included to avoid overstating exposure to specific factors. i.e. If cash were excluded, and weights normalized to 100%, exposure to CCC rated companies would be overstated.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_ENV_SCORE_AVG_PEER": {
+"name": "Fund ESG Environmental Score - Peer Average",
+"description": "The Fund MSCI ESG Environmental Score - Peer Average is an average of funds in the same peer group, based on their Fund ESG Environmental Scores.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_GOV_SCORE_AVG_PEER": {
+"name": "Fund ESG Governance Score - Peer Average",
+"description": "The Fund MSCI ESG Governance Score - Peer Average is an average of funds in the same peer group, based on their Fund ESG Governance Scores.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_LAGGARDS_PCT": {
+"name": "Fund ESG Laggards (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of B or CCC (worst in class relative to peers).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_LEADERS_PCT": {
+"name": "Fund ESG Leaders (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of AAA or AA (best in class relative to peers).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_QUALITY_SCORE": {
+"name": "Fund ESG Quality Score",
+"description": "The MSCI ESG Quality Score (0 - 10) for funds is calculated using the weighted average of the ESG scores of fund holdings. The Score also considers ESG Rating trend of holdings and the fund exposure to holdings in the laggard category.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_QUALITY_SCORE_PCTL_PEER": {
+"name": "Fund ESG Quality Score - Peer Percentile",
+"description": "The MSCI ESG Quality Score - Peer Percentile is a percentile of funds in the same peer group, based on their ESG Quality Scores.",
+"units": "1-100",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_RATING": {
+"name": "Fund ESG Rating (AAA-CCC)",
+"description": "The MSCI ESG Rating for funds is designed to measure the resiliency of portfolios to long-term ESG risks and opportunities. The most highly rated funds consist of issuers with leading or improving management of key ESG risks. The ESG Rating is calculated as a direct mapping of ESG Quality Scores to letter rating categories (e.g. AAA = 8.6-10). The ESG Ratings range from leader (AAA, AA), average (",
+"units": "Text",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_RATING_A": {
+"name": "Fund ESG Rating A (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of A. ESG Ratings are based on a seven-letter scale from AAA to CCC.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_RATING_AA": {
+"name": "Fund ESG Rating AA (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of AA. ESG Ratings are based on a seven-letter scale from AAA to CCC.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_RATING_AAA": {
+"name": "Fund ESG Rating AAA (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of AAA. ESG Ratings are based on a seven-letter scale from AAA to CCC.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_RATING_B": {
+"name": "Fund ESG Rating B (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of B. ESG Ratings are based on a seven-letter scale from AAA to CCC.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_RATING_BB": {
+"name": "Fund ESG Rating BB (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of BB. ESG Ratings are based on a seven-letter scale from AAA to CCC.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_RATING_BBB": {
+"name": "Fund ESG Rating BBB (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of BBB. ESG Ratings are based on a seven-letter scale from AAA to CCC.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_RATING_CCC": {
+"name": "Fund ESG Rating CCC (%)",
+"description": "The percentage of portfolio's market value with an ESG rating of CCC. ESG Ratings are based on a seven-letter scale from AAA to CCC.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_SOCIAL_SCORE_AVG_PEER": {
+"name": "Fund ESG Social Score - Peer Average",
+"description": "The Fund MSCI ESG Social Score - Peer Average is an average of funds in the same peer group, based on their Fund ESG Social Scores.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_TREND_NONE_PCT": {
+"name": "Fund ESG Trend None (%)",
+"description": "The percentage of portfolio's market value without an ESG rating or without an ESG rating trend (initiated in the last year).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_TREND_POSITIVE_PCT": {
+"name": "Fund ESG Trend Positive (%)",
+"description": "The percentage of portfolio's market value with a positive ESG rating trend (upgrade) in the year prior to the most recent ESG rating.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ESG_TREND_STABLE_PCT": {
+"name": "Fund ESG Trend Stable (%)",
+"description": "The percentage of portfolio's market value with a stable ESG rating trend (maintain) in the year prior to the most recent ESG rating.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_ENVIRONMENTAL_SCORE": {
+"name": "Fund Environmental Score",
+"description": "A fund’s Environmental Score measures holdings’ management of and exposure to key environmental risks and opportunities.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_GOVERNANCE_SCORE": {
+"name": "Fund Governance Score",
+"description": "A fund’s Governance Score measures holdings’ management of and exposure to key governance risks and opportunities.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"ESG_SOCIAL_SCORE": {
+"name": "Fund Social Score",
+"description": "A fund’s Social Score measures holdings’ management of and exposure to key social risks and opportunities.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_WEIGHTED_AVG_ESG_SCORE": {
+"name": "Fund Weighted Average ESG Score",
+"description": "The Fund Weighted Average ESG Score is the fund overall score based on the weighted average of the underlying holdings ESG Score.",
+"units": "0-10",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_WEIGHTED_AVG_SCORE_PCTL_PEER": {
+"name": "Fund Weighted Average ESG Score - Peer Percentile",
+"description": "The Weighted Average ESG Score - Peer Percentile is a percentile rank (1-100) that measures how the Fund Weighted Average ESG Score ranks relative to other funds in the same peer group.",
+"units": "1-100",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ALT_ENERGY_INVOLV_PCT": {
+"name": "Fund Alternative Energy Involvement (%)",
+"description": "The percentage of fund’s market values exposed to companies that generate revenue from alternative energy goods and services. Additionally, alternative energy revenue from companies with negative externalities are excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory lending, involvement in controversial weapon",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ENERGY_EFF_INVOLV_PCT": {
+"name": "Fund Energy Efficiency Involvement (%)",
+"description": "The percentage of fund’s market values exposed to companies that generate revenue from energy efficiency goods and services. Additionally, alternative energy efficiency from companies with negative externalities are excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory lending, involvement in controversial weap",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CLEAN_TECH_INVOLV_PCT": {
+"name": "Fund Environmental Impact Involvement (%)",
+"description": "The percentage of fund’s market values exposed to companies that generate revenue from environmental impact goods and services. Additionally, environmental impact revenue from companies with negative externalities are excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory lending, involvement in controversial we",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ALT_ENERGY_PCT": {
+"name": "Fund Revenue Exposure to Alternative Energy (%)",
+"description": "A portfolio’s exposure to Alternative Energy is the portfolio weighted average of each company’s percent of revenue generated by Alternative Energy goods and services. Additionally, Alternative Energy revenue from companies with negative externalities is excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory len",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_ENERGY_EFF_PCT": {
+"name": "Fund Revenue Exposure to Energy Efficiency (%)",
+"description": "A portfolio’s exposure to Energy Efficiency is the portfolio weighted average of each company’s percent of revenue generated by Energy Efficiency goods and services. Additionally, Energy Efficiency revenue from companies with negative externalities is excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory lendin",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_CLEAN_TECH_PCT": {
+"name": "Fund Revenue Exposure to Environmental Impact (%)",
+"description": "A portfolio’s exposure to Environmental Impact is the portfolio weighted average of each company’s percent of revenue generated by Environmental Impact goods and services. Additionally, Environmental Impact revenue from companies with negative externalities is excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predato",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SOCIAL_IMPACT_PCT": {
+"name": "Fund Revenue Exposure to Social Impact (%)",
+"description": "A portfolio’s exposure to Social Impact is the portfolio weighted average of each company’s percent of revenue generated by Social Impact goods and services. Additionally, Social Impact revenue from companies with negative externalities is excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory lending, involveme",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SUSTAINABLE_IMPACT_PCT": {
+"name": "Fund Revenue Exposure to Sustainable Impact Solutions (%)",
+"description": "A portfolio’s exposure to Sustainable Impact Solutions is the portfolio weighted average of each company’s percent of revenue generated by Sustainable Impact Solutions goods and services. Additionally, Sustainable Impact Solutions revenue from companies with negative externalities is excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direc",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SOCIAL_IMPACT_INVOLV_PCT": {
+"name": "Fund Social Impact Involvement (%)",
+"description": "The percentage of fund’s market values exposed to companies that generate revenue from social impact goods and services. Additionally, social impact revenue from companies with negative externalities are excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory lending, involvement in controversial weapons, more th",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SUSTAINABLE_IMPACT_INVOLV_PCT": {
+"name": "Fund Sustainable Impact Solutions Involvement (%)",
+"description": "The percentage of fund’s market values exposed to companies that generate revenue from sustianable impact solutions goods and services. Additionally, sustianable impact solutions revenue from companies with negative externalities are excluded. Negative externalities refer to very severe and severe ESG controversies, ESG Ratings of CCC and B, direct involvement in predatory lending, involvement in ",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_REV_EXP_EST_EU_TAXONOMY_MAX_REV": {
+"name": "Fund Revenue Exposure to Estimated EU Taxonomy Alignment",
+"description": "The weighted average of the fund’s issuers' estimated maximum percent of revenue from products and services addressing environmental objectives, based on the framework set by the MSCI Sustainable Impact Metrics. The calculation includes revenue from all companies in the MSCI Sustainable Impact universe and is not limited to those that are required to report taxonomy data, which may lead to an over",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_OPS_PROT_BIODIV_CONTROVS": {
+"name": "Fund SFDR Activities negatively affecting biodiversity-sensitive areas (%)",
+"description": "The percentage of the fund's market value exposed to issuers' that reported having operations in or near biodiversity sensitive areas and have been implicated in controversies with severe or very severe impacts on the environment.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_ACTIVE_FF_SECTOR_EXPOSURE": {
+"name": "Fund SFDR Exposure to companies active in the fossil fuel sector (%)",
+"description": "The percentage of the fund's market value exposed to issuers with fossil fuels related activities, including extraction, processing, storage and transportation of petroleum products, natural gas, and thermal and metallurgical coal.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_CONTRO_WEAP_CBLMBW_ANYTIE": {
+"name": "Fund SFDR Exposure to controversial weapons (anti-personnel mines, cluster munitions, chemical weapons and biological weapons) (%)",
+"description": "The percentage of the fund's market value exposed to issuers with an industry tie to landmines, cluster munitions, chemical weapons or biological weapons. Note: Industry ties includes ownership, manufacturing and investments. Ties to landmines do not include related safety products.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_MECH_UN_GLOBAL_COMPACT": {
+"name": "Fund SFDR Lack of processes and compliance mechanisms to monitor compliance with UN Global Compact principles and OECD Guidelines for Multinational Enterprises (%)",
+"description": "The percentage of the fund's market value exposed to issuers that are not signatories in the UN Global Compact.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_GENDER_PAY_GAP_RATIO": {
+"name": "Fund SFDR Unadjusted gender pay gap",
+"description": "The fund holdings' weighted average of the difference between the average gross hourly earnings of male and female employees, as a percentage of male gross earnings.",
+"units": "ratio",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_GENDER_PAY_GAP_RATIO_COV": {
+"name": "Fund SFDR Unadjusted gender pay gap coverage (%)",
+"description": "The percentage of a fund’s market value invested in issuers with Gender pay gap ratio data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_VIOLATIONS_UNGC_OECD": {
+"name": "Fund SFDR Violations of UN Global Compact principles and Organization for Economic Cooperation and Development (OECD) Guidelines for Multinational Enterprises (%)",
+"description": "The percentage of the fund's market value exposed to issuers with severe or very severe controversies related to the company’s operations and/or products.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FP_REG_FRAME_SFDR_ART6": {
+"name": "Fund not sustainable under EU SFDR Article 6",
+"description": "Flagged as (T) if a fund manager has deemed that sustainability risks, as defined by the EU SFDR, are not relevant to the investment process for this fund and are not integrated into investment or insurance advice.",
+"units": "flag (T)",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FP_REG_FRAME_SFDR_ART8": {
+"name": "Fund policy - EU SFDR Article 8",
+"description": "Flagged as (T) for funds that are classified under Article 8 of the EU SFDR by fund manager, i.e. the fund promotes, among other characteristics, environmental or social characteristics.",
+"units": "flag (T)",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FP_REG_FRAME_SFDR_ART9": {
+"name": "Fund policy - EU SFDR Article 9",
+"description": "Flagged as (T) for funds that are classified under Article 9 of the EU SFDR by fund manager, i.e. the fund has sustainable investment as its objective.",
+"units": "flag (T)",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_GHG_INTENSITY": {
+"name": "Fund SFDR GHG Intensity of investee companies",
+"description": "The fund's weighted average of its holding issuers' GHG Intensity (Scope 1, Scope 2 and estimated Scope 3 GHG emissions/EUR million revenue).",
+"units": "emissions/EUR million revenue",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_GHG_INTENSITY_COV": {
+"name": "Fund SFDR GHG Intensity of investee companies coverage %",
+"description": "The percentage of a fund’s market value invested in issuers with carbon emissions (scope 1, 2, and 3) and revenue (EUR million) data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_OPS_PROT_BIODIV_CONTROVS_COV": {
+"name": "Fund SFDR Activities negatively affecting biodiversity-sensitive areas (%) coverage %",
+"description": "The percentage of a fund’s market value invested in issuers that MSCI has reviewed for SFDR activities negatively affecting biodiversity-sensitive areas.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_VIOLATIONS_UNGC_OECD_COV": {
+"name": "Fund SFDR Violations of UN Global Compact principles and Organization for Economic Cooperation and Development (OECD) Guidelines for Multinational Enterprises (%) coverage %",
+"description": "The percentage of a fund’s market value invested in issuers that MSCI has reviewed for SFDR violations of UN Global Compact principles and Organization for Economic Cooperation and Development (OECD) Guidelines for Multinational Enterprises.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_MECH_UN_GLOBAL_COMPACT_COV": {
+"name": "Fund SFDR Lack of processes and compliance mechanisms to monitor compliance with UN Global Compact principles and OECD Guidelines for Multinational Enterprises (%) coverage %",
+"description": "The percentage of a fund’s market value invested in issuers that MSCI has reviewed for SFDR lack of processes and compliance mechanisms to monitor compliance with UN Global Compact principles and OECD Guidelines for Multinational Enterprises.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_FEMALE_DIRECTORS_PCT": {
+"name": "Fund SFDR Board Gender Diversity",
+"description": "The fund holdings' weighted average of the percentage of board members who are female.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_PROD_CHEM": {
+"name": "Fund SFDR Investments in companies producing chemicals (%)",
+"description": "The percentage of the fund’s market value exposed to issuers classified as manufacturers of pesticides and other agrochemical products by NACE Group (NACE Group Code 20.2).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_TRIR": {
+"name": "Fund SFDR Rate of accidents",
+"description": "The total recordable incident rate (fatalities, lost time injuries, restricted work injuries and medical treatment injuries) associated with EUR 1 million invested in the fund. It is calculated as the weighted average of Total Recordable Incident Rate per company divided by the company’s most recently available enterprise value including cash (EVIC).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_TRIR_COV": {
+"name": "Fund SFDR Rate of accidents coverage %",
+"description": "The percentage of a fund’s market value invested in issuers with a Total Recordable Incident Rate data.",
+"units": "Incidents per EUR 1 million invested (rate)",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_CONTR_DISCRIMINATION_DIV_N_SEVERE": {
+"name": "Fund SFDR Incidents of discrimination (reported)",
+"description": "The total number of severe and very severe discrimination and diversity controversies associated with EUR 1 million invested in the fund. It is calculated as the weighted average of Number of Severe and Very Severe Discrimination and Diversity Controversies per company divided by the company’s most recently available enterprise value including cash (EVIC).",
+"units": "Very severe discrimination and diversity controversies per EUR 1 million invested (ratio)",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_CONTR_DISCRIMINATION_DIV_N_SEVERE_COV": {
+"name": "Fund SFDR Incidents of discrimination (reported) coverage %",
+"description": "The percentage of a fund’s market value invested in issuers with Number of Severe and Very Severe Discrimination and Diversity Controversies data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_CORR_BRIB_POLICY_UN": {
+"name": "Fund SFDR Lack of anti-corruption and anti-bribery policies (%)",
+"description": "The percentage of the fund's market value exposed to issuers without an anti-corruption and anti-bribery policy consistent with the United Nations Convention against Corruption.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_CORR_BRIB_POLICY_UN_COV": {
+"name": "Fund SFDR Lack of anti-corruption and anti-bribery policies  coverage %",
+"description": "The percentage of a fund’s market value invested in issuers that MSCI has reviewed for SFDR lack of anti-corruption and anti-bribery policies.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_FINANCED_CARBON_EMISSIONS": {
+"name": "Fund Financed Scope 1+2 Carbon Emissions (Carbon Emissions / USD Million Invested)",
+"description": "Represents a normalized measure of a fund's contribution to climate change that apportions companies’ Scope 1+2 carbon emissions across all outstanding shares and bonds. This figure measures the total annual Scope 1 and 2 carbon emissions (reported or estimated) associated with USD 1 million invested in the fund. It is calculated as the sum of companies’ Scope 1+2 carbon emissions weighted by the ",
+"units": "tons CO2e / $M Sales",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_FINANCED_CARBON_EMISSIONS_COVERAGE": {
+"name": "Fund Financed Scope 1+2 Carbon Emissions Coverage (%)",
+"description": "The percentage of a portfolio's market value with Carbon Emissions - Scope 1+2 Intensity (t/USD million EVIC) data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_WEIGHTED_AVG_CARBON_INTEN": {
+"name": "Fund Weighted Average Scope 1+2 Carbon Intensity",
+"description": "The Weighted Average Scope 1+2 Carbon Intensity measures a fund's exposure to carbon intensive companies . The figure is sum of security weight (normalized) multiplied by the security Scope 1+2 Carbon Intensity.",
+"units": "tons CO2e / $M Sales",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_WEIGHTED_AVG_CARBON_INTEN_COVERAGE": {
+"name": "Fund Weighted Average Scope 1+2 Carbon Intensity Coverage (%)",
+"description": "The percentage of a portfolio's market value with Carbon Intensity data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_WEIGHTED_AVG_SOV_CARBON_INTEN": {
+"name": "Fund Weighted Average Sovereign Carbon Intensity (t/USD million GDP nominal)",
+"description": "Weighted average of sovereign issuer’s carbon emissions generated by all economic activities performed domestically, per unit of GDP (USD million).",
+"units": "tons CO2e / $M GDP",
+"product": "MSCI ESG Fund Ratings",
+"type": "issuer"
+},
+"FUND_WEIGHTED_AVG_SOV_CARBON_INTEN_COVERAGE": {
+"name": "Fund Weighted Average Sovereign Carbon Intensity Coverage (%)",
+"description": "The percentage of a portfolio's market value with GHG intensity data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "issuer"
+},
+"FUND_IMPLIED_TEMP_RISE": {
+"name": "Fund Implied Temperature Rise",
+"description": "A fund’s Implied Temperature Rise measures, in aggregate, a fund’s temperature alignment (in °C) to keeping the world’s temperature rise to 2°C by 2100. The calculation uses an aggregated budget approach that compares the sum of financed emission budget overshoot against the sum of financed carbon emission budgets for the underlying portfolio holdings. The total fund carbon emission over/undershoo",
+"units": "°C",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_IMPLIED_TEMP_RISE_COVERAGE": {
+"name": "Fund Implied Temperature Rise Coverage",
+"description": "The percentage of a fund’s market value invested in issuers with an Implied Temperature Rise (°C).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_OIL_GAS_ANY_TIE": {
+"name": "Fund Oil and Gas Involvement (%)",
+"description": "The percentage of fund's market value exposed to companies with an industry tie to oil and gas, in particular reserve ownership, oil and gas related revenues and power generation. It does not include companies generating revenues from biofuels.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_SFDR_CORR_BRIB_CONVICTIONS_COUNT": {
+"name": "Fund SFDR Number of convictions for violation of anti-corruption and anti-bribery laws",
+"description": "The sum of number of convictions against the fund’s holdings for violation of anti-corruption and anti-bribery laws.rruption and anti-bribery laws.",
+"units": "Count",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_HAS_SBTI_APPROVED_TARGET": {
+"name": "Fund SBTi approved Emission Target (%)",
+"description": "The percentage of the fund’s market value exposed to issuers that have carbon emissions reduction targets approved by the Science Based Targets initiative (SBTi).",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+},
+"FUND_HAS_SBTI_APPROVED_TARGET_COV": {
+"name": "Fund SBTi approved Emission Target Coverage (%)",
+"description": "The percentage of the fund's market value invested in issuers with SBTi approved Emission Target data.",
+"units": "%",
+"product": "MSCI ESG Fund Ratings",
+"type": "fund"
+}
+}
