@@ -19,22 +19,26 @@ le système demande de réduire les mouvements.
 
 ## Démarrer
 
-Prérequis : Python 3.11 ou plus récent. Aucune dépendance au-delà de `requests` et `openpyxl`
-(les mêmes que le projet de Mehdi) ; pas de CDN JavaScript.
+**Guide complet pour débutant (PDF) : [`docs/Guide_utilisateur.pdf`](docs/Guide_utilisateur.pdf)**,
+avec l'installation, l'usage, le dépannage et la reprise du projet.
 
-**Windows** : double-cliquer sur `lancer.bat`. La première fois, il crée `.venv` et installe
-les dépendances ; le navigateur s'ouvre ensuite sur `http://127.0.0.1:8765/`.
+**Windows** : décompresser le dossier, puis double-cliquer sur `lancer.bat`. Le lanceur :
 
-**Terminal** (toutes plateformes) :
+1. cherche un Python 3.10+ (copie locale `.python`, puis `py`, puis `python`) ;
+2. s'il n'en trouve pas, propose de télécharger le Python officiel (python.org, version
+   « embeddable », 11 Mo) dans le sous-dossier `.python` du projet, sans droits administrateur ;
+3. démarre l'application et ouvre le navigateur. Si elle est déjà ouverte, il rouvre l'onglet ;
+   si le port 8765 est pris, il essaie les suivants.
 
-```bash
-python -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt     # Windows : .venv\Scripts\python.exe
-.venv/bin/python -m app                                  # --demo pour des données fictives
-```
+Les bibliothèques (`requests`, `openpyxl`, `truststore`…) sont fournies dans `vendor/` : ni `pip`
+ni accès à PyPI ne sont nécessaires. `truststore` fait utiliser à Python les certificats de
+Windows, ce qui évite les erreurs TLS derrière un proxy d'entreprise.
 
-Identifiants MSCI : copier `.env.example` en `.env` et renseigner `MSCI_CLIENT_ID` et
-`MSCI_CLIENT_SECRET`, ou les saisir dans l'interface (bouton en haut à droite). Saisis dans
+**macOS / Linux** : `./lancer.sh` (Python 3.10+ requis), ou `python3 -m app`. Option `--demo`
+pour des données fictives.
+
+Identifiants MSCI : les saisir dans l'interface (bouton en haut à droite), ou copier
+`.env.example` en `.env` et renseigner `MSCI_CLIENT_ID` et `MSCI_CLIENT_SECRET`. Saisis dans
 l'interface, ils restent uniquement en mémoire du processus local. Le serveur n'écoute que sur
 `127.0.0.1` et ne renvoie jamais les identifiants au navigateur.
 
@@ -130,11 +134,15 @@ jamais de secret ni de token.
 | `app/server.py`, `app/jobs.py` | Serveur local (bibliothèque standard), extractions en arrière-plan |
 | `app/static/` | Interface (HTML/CSS/JS sans dépendance) |
 | `app/mock.py` | Client simulé du mode démonstration |
+| `vendor/` | Bibliothèques Python fournies (pur Python, aucune compilation) |
+| `docs/` | Guide utilisateur PDF et sa source HTML |
 
 Pour modifier une correspondance, éditer `app/data/mapping.json` (l'application refuse de
 démarrer si les colonnes ne correspondent plus exactement au template).
 
 Tests hors connexion (19) : `pip install pytest` puis `python -m pytest`.
+
+Le guide PDF se régénère depuis `docs/guide_source/guide.html` (impression A4 par Chromium).
 
 ## Documentation de référence
 

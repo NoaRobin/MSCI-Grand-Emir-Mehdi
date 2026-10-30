@@ -241,16 +241,41 @@ class Handler(BaseHTTPRequestHandler):
         self._send(200, target.read_bytes(), kind)
 
 
+def _already_running(port: int) -> bool:
+    """Vrai si cette application repond deja sur ce port (double-clic sur le lanceur)."""
+    from urllib.request import urlopen
+    try:
+        with urlopen(f"http://127.0.0.1:{port}/api/status", timeout=2) as response:
+            return "version" in json.loads(response.read().decode("utf-8"))
+    except Exception:
+        return False
+
+
 def serve(port: int = 8765, open_browser: bool = True) -> None:
+    import webbrowser
     load_env(ROOT / ".env")
     mimetypes.add_type("application/javascript", ".js")
     mapping.load()  # verifie template + mapping avant de demarrer
     Handler.state = State()
-    httpd = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    httpd = None
+    for candidate in range(port, port + 10):
+        try:
+            httpd = ThreadingHTTPServer(("127.0.0.1", candidate), Handler)
+            port = candidate
+            break
+        except OSError:
+            if _already_running(candidate):
+                url = f"http://127.0.0.1:{candidate}/"
+                print(f"L'application est déjà ouverte : {url}")
+                if open_browser:
+                    webbrowser.open(url)
+                return
+    if httpd is None:
+        raise OSError(f"Aucun port libre entre {port} et {port + 9}.")
     url = f"http://127.0.0.1:{port}/"
-    print(f"Extraction MSCI ESG prête : {url}  (Ctrl+C pour arrêter)")
+    print(f"Extraction MSCI ESG prête : {url}")
+    print("Laisser cette fenêtre ouverte pendant l'utilisation ; la fermer arrête l'application.")
     if open_browser:
-        import webbrowser
         threading.Timer(0.8, lambda: webbrowser.open(url)).start()
     try:
         httpd.serve_forever()

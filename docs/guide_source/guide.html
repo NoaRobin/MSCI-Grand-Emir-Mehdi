@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Extraction MSCI ESG : guide utilisateur et reprise du projet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Fira+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+  @page { size: A4; margin: 20mm 18mm 20mm 18mm; }
+  @page :first { margin: 0; }
+  :root {
+    --ink: #15202a; --ink-2: #45525d; --ink-3: #6f7c87; --line: #d8dee3; --soft: #f2f5f7;
+    --v4: #1b8a63; --v3: #3a78c4; --hist: #a8711b; --input: #7a8691; --bad: #b8432f; --dark: #0e1216;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font: 400 10.5pt/1.55 "Fira Sans", "Segoe UI", sans-serif; color: var(--ink); font-feature-settings: "tnum" 1; }
+  h1, h2, h3 { font-weight: 600; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 19pt; margin: 0 0 4mm; padding-top: 2mm; break-after: avoid; }
+  h2 .num { color: var(--ink-3); font-weight: 500; margin-right: 3mm; }
+  h3 { font-size: 12.5pt; margin: 7mm 0 2mm; break-after: avoid; }
+  p { margin: 0 0 3mm; max-width: 165mm; }
+  ul, ol { margin: 0 0 3.5mm; padding-left: 6mm; }
+  li { margin-bottom: 1.5mm; }
+  code, .code { font-family: "Fira Code", Consolas, monospace; font-size: 0.88em; background: var(--soft); padding: 0.3mm 1.2mm; border-radius: 1mm; }
+  strong { font-weight: 600; }
+  a { color: var(--v3); text-decoration: none; }
+  section { break-before: page; }
+  .lead { font-size: 12pt; color: var(--ink-2); max-width: 150mm; }
+
+  /* Couverture */
+  .cover { height: 297mm; padding: 26mm 22mm; background: var(--dark); color: #e8edef; display: flex; flex-direction: column; break-after: page; }
+  .cover .mark { display: grid; grid-template-columns: repeat(9, 7mm); gap: 1.6mm; margin-bottom: 18mm; }
+  .cover .mark i { height: 7mm; border-radius: 1mm; background: #232c35; }
+  .cover .mark i.a { background: #24a176; } .cover .mark i.b { background: #4f8fdd; } .cover .mark i.c { background: #bc8226; }
+  .cover h1 { font-size: 34pt; line-height: 1.08; max-width: 150mm; }
+  .cover .subtitle { font-size: 14pt; color: #a7b3bc; margin-top: 6mm; max-width: 140mm; }
+  .cover .who { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; font-size: 10pt; color: #a7b3bc; }
+  .cover .who strong { display: block; color: #e8edef; font-size: 11pt; margin-bottom: 1mm; }
+  .cover .meta { margin-top: 10mm; padding-top: 5mm; border-top: 1px solid #2a343f; font-size: 9pt; color: #808d98; display: flex; justify-content: space-between; }
+
+  /* Composants */
+  .steps { list-style: none; padding: 0; counter-reset: s; }
+  .steps > li { counter-increment: s; display: grid; grid-template-columns: 9mm 1fr; gap: 3mm; margin-bottom: 3mm; break-inside: avoid; }
+  .steps > li::before { content: counter(s); width: 7mm; height: 7mm; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 9.5pt; margin-top: 0.4mm; }
+  .steps > li > div > strong:first-child { display: block; }
+  .box { border: 1px solid var(--line); border-radius: 2mm; padding: 3.5mm 4.5mm; margin: 3mm 0 4mm; break-inside: avoid; background: #fff; }
+  .box.tip { border-left: 1.2mm solid var(--v4); }
+  .box.warn { border-left: 1.2mm solid var(--hist); background: #fcf8f1; }
+  .box.stop { border-left: 1.2mm solid var(--bad); background: #fcf3f1; }
+  .box > strong:first-child { display: block; margin-bottom: 1mm; }
+  .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  .console { background: var(--dark); color: #d6dde2; font: 400 8pt/1.5 "Fira Code", Consolas, monospace; padding: 4mm 5mm; border-radius: 2mm; margin: 3mm 0 4mm; white-space: pre-wrap; break-inside: avoid; }
+  .console .t { color: #6f9a8c; }
+  figure { margin: 3mm 0 5mm; break-inside: avoid; }
+  figure img { width: 86%; display: block; border-radius: 2mm; border: 1px solid var(--line); }
+  figure.half img { width: 44%; }
+  figure.small img { width: 52%; }
+  figcaption { font-size: 9pt; color: var(--ink-3); margin-top: 1.5mm; }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 5mm; font-size: 9.5pt; break-inside: auto; }
+  th, td { text-align: left; vertical-align: top; padding: 2mm 2.5mm; border-bottom: 1px solid var(--line); }
+  th { font-weight: 600; color: var(--ink-2); font-size: 8.8pt; background: var(--soft); }
+  tr { break-inside: avoid; }
+  .sw { display: inline-block; width: 3mm; height: 4mm; border-radius: 0.6mm; vertical-align: -0.6mm; margin-right: 1.5mm; }
+  .flow { display: grid; grid-template-columns: 1fr 8mm 1fr 8mm 1fr; align-items: center; margin: 5mm 0 6mm; break-inside: avoid; }
+  .flow .n { border: 1px solid var(--line); border-radius: 2mm; padding: 3.5mm; min-height: 25mm; }
+  .flow .n b { display: block; margin-bottom: 1mm; }
+  .flow .n span { font-size: 9pt; color: var(--ink-2); }
+  .flow .arrow { text-align: center; color: var(--ink-3); font-size: 14pt; }
+  .cascade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin: 4mm 0 5mm; break-inside: avoid; }
+  .cascade div { border-radius: 2mm; padding: 3.5mm; color: #fff; }
+  .cascade b { display: block; font-size: 11pt; }
+  .cascade span { font-size: 8.8pt; opacity: 0.95; }
+  .toc { list-style: none; padding: 0; margin: 4mm 0 0; }
+  .toc li { display: flex; gap: 3mm; padding: 2.2mm 0; border-bottom: 1px solid var(--line); font-size: 11pt; }
+  .toc li span:first-child { color: var(--ink-3); width: 7mm; }
+  .toc li em { font-style: normal; color: var(--ink-3); margin-left: auto; font-size: 9.5pt; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .tree { font: 400 8.8pt/1.65 "Fira Code", Consolas, monospace; background: var(--soft); padding: 4mm 5mm; border-radius: 2mm; white-space: pre; break-inside: avoid; }
+  .tree .c { color: var(--ink-3); }
+  .kbd { font-family: "Fira Sans", sans-serif; font-size: 0.85em; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 1mm; padding: 0 1.3mm; background: #fff; }
+</style>
+</head>
+<body>
+
+<!-- ================================================================ COUVERTURE -->
+<div class="cover">
+  <div class="mark">
+    <i class="a"></i><i class="b"></i><i class="c"></i><i class="a"></i><i class="a"></i><i></i><i class="b"></i><i></i><i></i>
+    <i class="a"></i><i class="a"></i><i class="b"></i><i class="b"></i><i class="a"></i><i class="c"></i><i class="a"></i><i></i><i></i>
+    <i class="b"></i><i class="a"></i><i></i><i class="c"></i><i class="a"></i><i class="a"></i><i></i><i></i><i></i>
+  </div>
+  <h1>Extraction MSCI ESG</h1>
+  <p class="subtitle">Guide pas à pas pour utiliser l'application sans savoir coder, puis pour reprendre et faire évoluer le projet.</p>
+  <div class="who">
+    <div><strong>Partie 1 : utiliser l'application</strong>Installation en un double-clic, connexion à MSCI, extraction, lecture du fichier Excel, problèmes courants.</div>
+    <div><strong>Partie 2 : reprendre le projet</strong>Organisation des fichiers, modifier une colonne, comprendre l'extraction, tester et mettre à jour.</div>
+  </div>
+  <div class="meta"><span>Version 1.0 · octobre 2026</span><span>Dépôt GitHub : NoaRobin/MSCI-Grand-Emir-Mehdi</span></div>
+</div>
+
+<!-- ================================================================ SOMMAIRE -->
+<section style="break-before: auto">
+  <h2>Sommaire</h2>
+  <ul class="toc">
+    <li><span>1</span>À quoi sert l'application<em>en deux minutes</em></li>
+    <li><span>2</span>Avant de commencer<em>ce qu'il faut avoir</em></li>
+    <li><span>3</span>Installer et lancer<em>une seule fois</em></li>
+    <li><span>4</span>Se connecter à MSCI</li>
+    <li><span>5</span>Faire une extraction<em>l'usage de tous les jours</em></li>
+    <li><span>6</span>Lire le résultat</li>
+    <li><span>7</span>En cas de problème</li>
+    <li><span>8</span>Reprendre le projet<em>pour la personne qui maintient</em></li>
+    <li><span>9</span>Glossaire</li>
+  </ul>
+  <div class="box tip" style="margin-top: 10mm">
+    <strong>Le parcours le plus court</strong>
+    <p>Décompresser le dossier, double-cliquer sur <code>lancer.bat</code>, cliquer sur <em>Se connecter à MSCI</em>, coller ses ISIN, cliquer sur <em>Extraire les données</em>, puis sur <em>Télécharger l'Excel</em>. Le reste du guide détaille chacune de ces étapes.</p>
+  </div>
+</section>
+
+<!-- ================================================================ 1 -->
+<section>
+  <h2><span class="num">1</span>À quoi sert l'application</h2>
+  <p class="lead">Vous avez une liste de codes ISIN (actions, obligations, fonds). L'application va chercher chez MSCI les données ESG correspondantes et vous rend un fichier Excel prêt à importer, au format exact attendu par l'équipe.</p>
+  <div class="flow">
+    <div class="n"><b>Vos ISIN</b><span>Un fichier Excel, ou une liste collée à la main.</span></div>
+    <div class="arrow">→</div>
+    <div class="n"><b>MSCI</b><span>L'application interroge l'API MSCI ESG à votre place.</span></div>
+    <div class="arrow">→</div>
+    <div class="n"><b>Le fichier Excel</b><span>Feuilles « Template Import Titres » et « Template Import Fonds ».</span></div>
+  </div>
+  <h3>Ce qui est garanti</h3>
+  <ul>
+    <li><strong>Le format ne change pas</strong> : mêmes feuilles, mêmes colonnes dans le même ordre, mêmes en-têtes que le modèle de l'équipe (94 colonnes pour les titres, 123 pour les fonds).</li>
+    <li><strong>Rien n'est inventé</strong> : une valeur que MSCI ne fournit pas reste vide. Un 0 renvoyé par MSCI reste un 0.</li>
+    <li><strong>Vos lignes restent à leur place</strong> : l'ordre et les doublons de votre liste sont conservés, même pour un ISIN invalide.</li>
+    <li><strong>Vos identifiants restent sur votre poste</strong> : l'application tourne sur votre ordinateur. Elle n'est accessible qu'à vous (adresse <code>127.0.0.1</code>).</li>
+  </ul>
+  <h3>Comment elle trouve un maximum de valeurs</h3>
+  <p>MSCI propose plusieurs « portes d'entrée » à ses données, avec des droits différents selon votre abonnement. L'application les essaie l'une après l'autre, et ne demande à la suivante que ce qui manque encore :</p>
+  <div class="cascade">
+    <div style="background: var(--v4)"><b>1 · API V4</b><span>La source principale, toujours interrogée.</span></div>
+    <div style="background: var(--v3)"><b>2 · API V3</b><span>Pour les cellules encore vides. Droits souvent plus larges.</span></div>
+    <div style="background: var(--hist)"><b>3 · Historique</b><span>Dernière valeur publiée, pour ce qui manque encore.</span></div>
+  </div>
+  <p>Ces trois couleurs se retrouvent dans l'application : chaque case du fichier prend la couleur de la source qui l'a remplie.</p>
+</section>
+
+<!-- ================================================================ 2 -->
+<section>
+  <h2><span class="num">2</span>Avant de commencer</h2>
+  <table>
+    <tr><th style="width: 32%">Il vous faut</th><th>Où le trouver</th></tr>
+    <tr><td><strong>Un PC Windows</strong></td><td>Windows 10 ou 11. Aucun droit administrateur n'est nécessaire.</td></tr>
+    <tr><td><strong>Le dossier du projet</strong></td><td>Sur GitHub, dépôt <code>NoaRobin/MSCI-Grand-Emir-Mehdi</code> : bouton vert <em>Code</em>, puis <em>Download ZIP</em>. Demandez l'accès au dépôt à la personne qui le gère s'il ne s'affiche pas.</td></tr>
+    <tr><td><strong>Des identifiants MSCI</strong></td><td>Un <em>Client ID</em> et un <em>Client secret</em> pour l'API ESG, créés sur le MSCI Customer Center (onglet <em>OAuth 2.0 Client IDs</em>). Demandez-les au responsable du contrat MSCI. Ce ne sont pas vos identifiants de connexion personnels.</td></tr>
+    <tr><td><strong>Vos ISIN</strong></td><td>Dans un fichier Excel ou CSV, ou à coller directement.</td></tr>
+  </table>
+  <div class="box tip">
+    <strong>Pas encore d'identifiants MSCI ?</strong>
+    <p>L'application a un <strong>mode démonstration</strong> avec des données fictives : parfait pour la découvrir ou former quelqu'un. Il est proposé dans la fenêtre de connexion.</p>
+  </div>
+  <div class="box warn">
+    <strong>Python</strong>
+    <p>L'application est écrite en Python. Vous n'avez rien à faire : si Python n'est pas déjà sur le poste, le lanceur propose de le télécharger tout seul dans le dossier du projet (voir page suivante).</p>
+  </div>
+</section>
+
+<!-- ================================================================ 3 -->
+<section>
+  <h2><span class="num">3</span>Installer et lancer</h2>
+  <ol class="steps">
+    <li><div><strong>Décompresser le dossier</strong>Clic droit sur le fichier <code>.zip</code> téléchargé, puis <em>Extraire tout…</em>, puis <em>Extraire</em>. Choisissez un dossier simple, par exemple <code>Documents\MSCI</code>.
+      <div class="box stop" style="margin-top: 2mm"><strong>Ne lancez pas l'application depuis l'intérieur du .zip</strong><p>Windows laisse ouvrir les fichiers d'un zip sans l'extraire, mais l'application ne trouvera pas ses fichiers. Le lanceur vous le signale le cas échéant.</p></div></div></li>
+    <li><div><strong>Double-cliquer sur <code>lancer.bat</code></strong>C'est le seul fichier à ouvrir. Une fenêtre noire s'affiche : c'est normal, c'est le « moteur » de l'application.</div></li>
+    <li><div><strong>Si Windows affiche « Windows a protégé votre ordinateur »</strong>Cliquez sur <em>Informations complémentaires</em>, puis <em>Exécuter quand même</em>. Ce message apparaît pour tout fichier téléchargé depuis Internet. S'il n'y a pas de bouton <em>Exécuter quand même</em>, votre poste l'interdit : voir la partie 7.</div></li>
+    <li><div><strong>La première fois seulement : Python</strong>Si Python n'est pas trouvé, la fenêtre propose de le télécharger. Tapez <span class="kbd">O</span> pour accepter. Environ 11 Mo, une minute au plus. Il est rangé dans le dossier du projet (sous-dossier <code>.python</code>) ; rien n'est installé sur Windows.</div></li>
+    <li><div><strong>Le navigateur s'ouvre tout seul</strong>sur l'application, à l'adresse <code>http://127.0.0.1:8765</code>. Gardez la fenêtre noire ouverte pendant toute l'utilisation : la fermer arrête l'application.</div></li>
+  </ol>
+  <p>Les fois suivantes, le lanceur saute directement à la dernière étape. Si vous double-cliquez alors que l'application est déjà ouverte, il rouvre simplement l'onglet. Voici ce qu'affiche la fenêtre noire au premier lancement :</p>
+  <div class="console">Aucun Python 3.10 ou plus recent n'a ete trouve sur ce poste.
+
+Le lanceur peut telecharger le Python officiel 3.12.10 (python.org, environ 11 Mo)
+dans le sous-dossier .python de ce projet. Rien n'est installe sur Windows et
+aucun droit administrateur n'est demande. A faire une seule fois.
+
+Telecharger Python maintenant ? (O = oui, N = non) [O,N]?<span class="t">O</span>
+
+Telechargement en cours...
+Python installe dans le dossier .python du projet.
+
+Demarrage de l'application (Python : .python\python.exe)...
+Le navigateur va s'ouvrir. Gardez cette fenetre ouverte pendant l'utilisation.
+Extraction MSCI ESG prête : http://127.0.0.1:8765/</div>
+</section>
+
+<!-- ================================================================ 4 -->
+<section>
+  <h2><span class="num">4</span>Se connecter à MSCI</h2>
+  <p>À l'ouverture, le bouton en haut à droite indique <em>Se connecter à MSCI</em>, avec un point rouge. Cliquez dessus.</p>
+  <figure class="half"><img src="img/02_connexion.png" alt="Fenêtre de connexion MSCI"><figcaption>La fenêtre de connexion : collez le Client ID et le Client secret, puis « Se connecter ».</figcaption></figure>
+  <ul>
+    <li>Une fois connecté, le point devient vert et la fenêtre affiche ce que votre abonnement permet de lire : nombre de produits pour les titres et les fonds, accès à l'API V3.</li>
+    <li>Les identifiants saisis ici sont oubliés quand on ferme l'application. Pour ne plus avoir à les saisir, voir l'encadré ci-dessous.</li>
+    <li>Le lien <em>Essayer avec des données fictives</em> active le mode démonstration : un bandeau orange le rappelle, et le fichier produit commence par <code>DEMO_</code>.</li>
+  </ul>
+  <div class="box tip">
+    <strong>Mémoriser ses identifiants (facultatif)</strong>
+    <ol style="margin-bottom: 2mm">
+      <li>Dans le dossier du projet, copiez le fichier <code>.env.example</code> et renommez la copie en <code>.env</code> (sans rien avant le point).</li>
+      <li>Ouvrez <code>.env</code> avec le Bloc-notes et complétez les deux lignes : <code>MSCI_CLIENT_ID=…</code> et <code>MSCI_CLIENT_SECRET=…</code></li>
+      <li>Enregistrez et relancez <code>lancer.bat</code>.</li>
+    </ol>
+    <p>Ce fichier contient un secret : ne l'envoyez jamais par e-mail et ne le partagez pas. Chacun utilise ses propres identifiants.</p>
+  </div>
+</section>
+
+<!-- ================================================================ 5 -->
+<section>
+  <h2><span class="num">5</span>Faire une extraction</h2>
+  <figure><img src="img/03_saisie.png" alt="Écran principal avec une liste d'ISIN"><figcaption>À gauche, votre liste. À droite, la feuille Excel qui sera remplie : une ligne par ISIN, une case par colonne.</figcaption></figure>
+  <ol class="steps">
+    <li><div><strong>Choisir l'onglet : Titres ou Fonds</strong>Titres pour les actions et obligations (feuille « Template Import Titres »), Fonds pour les parts de fonds (feuille « Template Import Fonds »). On peut remplir les deux avant de lancer.</div></li>
+    <li><div><strong>Ajouter les ISIN, au choix :</strong>
+      <ul style="margin-top: 1.5mm">
+        <li><strong>Déposer un fichier Excel ou CSV</strong> sur la zone en pointillés, ou cliquer dessus pour le choisir. Il suffit d'une colonne intitulée <code>ISIN</code>. Des feuilles nommées « Titres » et « Fonds » sont rangées automatiquement dans le bon onglet.</li>
+        <li><strong>Coller une liste</strong> dans le cadre, un ISIN par ligne. Depuis Excel, on peut copier les colonnes <code>ISIN</code>, <code>Client_ID</code> et <code>Security_Status</code> ensemble : elles seront recopiées dans le fichier final.</li>
+      </ul></div></li>
+    <li><div><strong>Vérifier la liste</strong>Sous le cadre, l'application compte les ISIN et signale ceux qui sont mal saisis, avec la raison (longueur, format, faute de frappe). Les liens <em>Retirer les invalides</em> et <em>Retirer les doublons</em> corrigent la liste en un clic.
+      <figure class="small" style="margin-top: 2mm"><img src="img/03b_controle.png" alt="Contrôle des ISIN"></figure></div></li>
+    <li><div><strong>Cliquer sur « Extraire les données »</strong>Les cases de la feuille s'allument au fur et à mesure que MSCI répond : d'abord en vert (API V4), puis en bleu (V3) et en ambre (historique) pour combler les trous. Les étapes en cours s'affichent en haut à droite. Le bouton devient <em>Annuler l'extraction</em> si vous voulez arrêter.</div></li>
+  </ol>
+  <figure><img src="img/05_en_cours.png" alt="Extraction en cours"><figcaption>Extraction en cours : l'API V4 a répondu (vert), l'API V3 est interrogée pour les cases restantes.</figcaption></figure>
+  <h3>Les options (facultatives)</h3>
+  <p>Le lien <em>Sources et options</em>, sous la liste, permet de désactiver une source ou le cache. Par défaut, tout est activé ; il n'y a normalement rien à changer.</p>
+  <table>
+    <tr><th style="width: 38%">Option</th><th>Effet</th></tr>
+    <tr><td>Compléter avec l'API V3</td><td>Interroge la V3 pour les cases encore vides après la V4.</td></tr>
+    <tr><td>Compléter avec l'historique</td><td>Prend la dernière valeur publiée par MSCI pour ce qui manque encore. Sa date est visible au survol.</td></tr>
+    <tr><td>Valeurs de l'émetteur parent</td><td>Pour une obligation ou une filiale sans notation propre, reprend celle de la société mère.</td></tr>
+    <tr><td>Réutiliser les réponses des 6 dernières heures</td><td>Relancer la même liste est instantané : seuls les appels manquants sont refaits. À décocher pour forcer des données fraîches.</td></tr>
+  </table>
+</section>
+
+<!-- ================================================================ 6 -->
+<section>
+  <h2><span class="num">6</span>Lire le résultat</h2>
+  <figure><img src="img/06_resultat.png" alt="Résultat de l'extraction"><figcaption>Fin d'extraction : la feuille complète, la légende, le bouton de téléchargement et les explications.</figcaption></figure>
+  <ul>
+    <li><strong>Télécharger l'Excel</strong> : le fichier <code>import_msci_AAAAMMJJ_HHMM.xlsx</code> arrive dans votre dossier Téléchargements. Il contient toujours les deux feuilles du modèle.</li>
+    <li><strong>Diagnostic</strong> : un fichier technique (JSON) qui détaille chaque appel à MSCI. Utile pour le support MSCI ou pour la personne qui maintient l'outil. Il contient vos ISIN : ne le diffusez pas.</li>
+    <li><strong>Passer la souris sur une case</strong> affiche la valeur, sa source et sa date. Sur la barre grise du haut, elle indique pour combien de lignes la colonne est remplie.</li>
+  </ul>
+  <h3>Les couleurs des cases</h3>
+  <table>
+    <tr><th style="width: 30%">Couleur</th><th>Signification</th></tr>
+    <tr><td><span class="sw" style="background: var(--v4)"></span>Vert</td><td>Valeur fournie par l'API V4 (source principale).</td></tr>
+    <tr><td><span class="sw" style="background: var(--v3)"></span>Bleu</td><td>Valeur fournie par l'API V3, pour une case que la V4 laissait vide.</td></tr>
+    <tr><td><span class="sw" style="background: var(--hist)"></span>Ambre</td><td>Dernière valeur publiée, issue de l'historique. Vérifier la date au survol.</td></tr>
+    <tr><td><span class="sw" style="background: var(--input)"></span>Gris</td><td>Recopié depuis votre saisie (Client_ID, Security_Status, ISIN du fonds).</td></tr>
+    <tr><td><span class="sw" style="background: #2b343d"></span>Sombre</td><td>Case vide : MSCI n'a pas de valeur, ou votre abonnement ne la donne pas.</td></tr>
+  </table>
+  <h3>Les lignes marquées d'un point rouge</h3>
+  <table>
+    <tr><th style="width: 34%">Message</th><th>Ce qu'il faut faire</th></tr>
+    <tr><td>ISIN invalide, non envoyé</td><td>Corriger la faute de frappe dans la liste.</td></tr>
+    <tr><td>ISIN inconnu de MSCI</td><td>Vérifier le code ; MSCI ne couvre pas tous les titres.</td></tr>
+    <tr><td>Aucune donnée retournée</td><td>MSCI connaît le titre mais n'a rien envoyé.</td></tr>
+    <tr><td>Plusieurs fonds MSCI pour cet ISIN</td><td>Cas rare pour les fonds : à vérifier à la main avec MSCI.</td></tr>
+    <tr><td>Erreur MSCI sur ce lot</td><td>Panne passagère : relancer. Grâce au cache, seules ces lignes sont redemandées.</td></tr>
+  </table>
+  <p>Un point ambre signale « Références seules » : le nom et les identifiants sont connus, mais aucune donnée ESG n'est accessible pour ce titre.</p>
+  <figure><img src="img/08_notes.png" alt="Explications sous la feuille"><figcaption>Sous la feuille, l'application explique les lignes à vérifier et les colonnes restées vides (non couvertes par l'abonnement, ou sans valeur publiée).</figcaption></figure>
+</section>
+
+<!-- ================================================================ 7 -->
+<section>
+  <h2><span class="num">7</span>En cas de problème</h2>
+  <table>
+    <tr><th style="width: 33%">Ce que vous voyez</th><th>Ce qu'il faut faire</th></tr>
+    <tr><td>La fenêtre noire s'ouvre et se ferme aussitôt</td><td>Le dossier n'est probablement pas décompressé : faire <em>Extraire tout…</em> sur le zip, puis relancer <code>lancer.bat</code> depuis le dossier extrait.</td></tr>
+    <tr><td>« Windows a protégé votre ordinateur » sans bouton <em>Exécuter quand même</em></td><td>Votre poste bloque les fichiers téléchargés. Supprimer le dossier extrait, faire un clic droit sur le <code>.zip</code> téléchargé, <em>Propriétés</em>, cocher <em>Débloquer</em> en bas, OK, puis extraire à nouveau. Sinon, demander à l'IT d'autoriser le dossier.</td></tr>
+    <tr><td>« Le téléchargement a échoué »</td><td>Le proxy de l'entreprise bloque python.org. Demander à l'IT d'installer Python 3.10 ou plus récent (Centre logiciel), puis relancer : le lanceur l'utilisera.</td></tr>
+    <tr><td>Le navigateur ne s'ouvre pas</td><td>Ouvrir soi-même Chrome ou Edge à l'adresse affichée dans la fenêtre noire, en général <code>http://127.0.0.1:8765</code>.</td></tr>
+    <tr><td>« OAuth : HTTP 401 »</td><td>Client ID ou Client secret erroné. Vérifier le copier-coller (pas d'espace en trop) ou en générer un nouveau sur le MSCI Customer Center.</td></tr>
+    <tr><td>« Certificat TLS refusé »</td><td>Le proxy de l'entreprise intercepte les connexions. L'application utilise normalement les certificats de Windows ; si le message persiste, demander à l'IT le certificat de l'entreprise et l'indiquer dans <code>.env</code> (<code>REQUESTS_CA_BUNDLE=…</code>).</td></tr>
+    <tr><td>« MSCI injoignable »</td><td>Pas d'accès Internet ou proxy bloquant <code>api.msci.com</code> : vérifier la connexion, sinon contacter l'IT.</td></tr>
+    <tr><td>Beaucoup de colonnes vides « non autorisées »</td><td>Ces données ne font pas partie de votre abonnement MSCI. L'application ne peut pas les obtenir : voir avec le responsable du contrat MSCI.</td></tr>
+    <tr><td>« L'API V3 a refusé l'accès »</td><td>Normal si votre compte n'a pas la V3. Les autres sources ont été utilisées.</td></tr>
+    <tr><td>Message « La liste a changé depuis cette extraction »</td><td>Vous avez modifié la liste après l'extraction : relancer pour un fichier à jour.</td></tr>
+  </table>
+  <div class="box">
+    <strong>Pour demander de l'aide</strong>
+    <p>Joignez une capture de la fenêtre noire et, si possible, le fichier <em>Diagnostic</em> de l'extraction (en interne uniquement : il contient vos ISIN). Le diagnostic contient les identifiants d'appel <code>trace_id</code> que le support MSCI demandera. Il ne contient jamais vos identifiants MSCI.</p>
+  </div>
+</section>
+
+<!-- ================================================================ 8 -->
+<section>
+  <h2><span class="num">8</span>Reprendre le projet</h2>
+  <p class="lead">Cette partie s'adresse à la personne qui maintient l'outil. Pas besoin d'être développeur pour les tâches courantes (modifier une colonne, mettre à jour les identifiants) ; un peu de Python aide pour le reste.</p>
+  <h3>Organisation des fichiers</h3>
+  <div class="tree">MSCI-Grand-Emir-Mehdi/
+├── lancer.bat              <span class="c">le lanceur Windows (double-clic)</span>
+├── lancer.sh               <span class="c">équivalent macOS / Linux</span>
+├── .env.example            <span class="c">modèle pour mémoriser les identifiants MSCI</span>
+├── README.md               <span class="c">résumé technique du projet</span>
+├── app/                    <span class="c">l'application</span>
+│   ├── data/
+│   │   ├── template.xlsx   <span class="c">les deux feuilles du modèle d'import (ne pas renommer)</span>
+│   │   ├── mapping.json    <span class="c">pour chaque colonne : d'où vient la valeur</span>
+│   │   └── catalog.json    <span class="c">libellés et descriptions MSCI des codes utilisés</span>
+│   ├── client.py           <span class="c">connexion à MSCI : jetons, reprises, lots</span>
+│   ├── engine.py           <span class="c">l'extraction : V4, puis V3, puis historique</span>
+│   ├── excel_io.py         <span class="c">lecture des ISIN, écriture du fichier Excel</span>
+│   ├── server.py, jobs.py  <span class="c">le serveur local et le suivi des extractions</span>
+│   ├── mock.py             <span class="c">les données fictives du mode démonstration</span>
+│   └── static/             <span class="c">l'interface (HTML, CSS, JavaScript)</span>
+├── vendor/                 <span class="c">bibliothèques Python fournies (requests, openpyxl…)</span>
+├── tests/                  <span class="c">tests automatiques, sans appel à MSCI</span>
+├── docs/                   <span class="c">ce guide (PDF) et sa source</span>
+└── *.pdf, *.xlsx           <span class="c">documentation MSCI de référence (API V4, catalogue)</span></div>
+
+  <h3>Modifier d'où vient une colonne</h3>
+  <p>Chaque colonne du modèle a une règle dans <code>app/data/mapping.json</code>, dans le même ordre que dans Excel. Exemple :</p>
+  <div class="console">"ESG_RATING_DATE": {
+  "kind": "msci",
+  "candidates": ["ESG_RATING_DATE", "IVA_RATING_DATE"],
+  "note": "IVA_RATING_DATE = « ESG Rating Date » dans le catalogue MSCI."
+}</div>
+  <ul>
+    <li><code>candidates</code> : les codes MSCI essayés dans l'ordre ; le premier qui a une valeur l'emporte. Les codes exacts se trouvent dans le catalogue <em>MSCI ESG &amp; Climate Historical Data API Catalog</em>, colonne <em>Factor Column Header</em>.</li>
+    <li>Autres valeurs possibles de <code>kind</code> : <code>input</code> (recopié depuis la saisie), <code>input_isin</code> (l'ISIN saisi), <code>blocked</code> (laissé vide volontairement).</li>
+    <li>Ouvrir le fichier avec le Bloc-notes, modifier, enregistrer, relancer <code>lancer.bat</code>. Si une virgule ou un guillemet manque, l'application refuse de démarrer et indique pourquoi.</li>
+  </ul>
+  <div class="box warn">
+    <strong>Ajouter ou renommer une colonne du modèle</strong>
+    <p>Il faut modifier les deux fichiers ensemble : la feuille dans <code>app/data/template.xlsx</code>, et la règle correspondante dans <code>mapping.json</code>, au même rang. L'application vérifie au démarrage que les deux correspondent exactement, et refuse de démarrer sinon : on ne peut pas produire un fichier au mauvais format par accident.</p>
+  </div>
+</section>
+
+<section style="break-before: auto">
+  <h3>Comment se déroule une extraction</h3>
+  <ol>
+    <li><strong>Catalogue</strong> : l'application demande à MSCI la liste des codes que la V4 connaît pour votre compte, et n'envoie à la V4 que ceux-là.</li>
+    <li><strong>API V4</strong> : requêtes par paquets de 100 émetteurs (50 fonds) et 100 codes, avec la reprise des valeurs de l'émetteur parent.</li>
+    <li><strong>Fonds seulement</strong> : un ISIN de part que <code>/funds</code> ne reconnaît pas est traduit en identifiant MSCI (MDSUID) grâce au référentiel <code>/coverage</code>.</li>
+    <li><strong>API V3, puis historique</strong> : seulement pour les cases encore vides.</li>
+    <li><strong>Écriture</strong> : une copie de <code>template.xlsx</code> est remplie ligne à ligne ; les en-têtes et styles d'origine sont conservés.</li>
+  </ol>
+  <h3>Solidité</h3>
+  <ul>
+    <li>MSCI saturé (erreur 429) ou en maintenance (503) : nouvelles tentatives automatiques, en respectant le délai demandé par MSCI.</li>
+    <li>Un paquet en erreur n'arrête pas tout : ses lignes sont marquées, le reste est livré. Un paquet refusé (erreur 400) est coupé en deux jusqu'à trouver l'ISIN qui pose problème.</li>
+    <li>Une source refusée (V3 non souscrite, par exemple) est signalée ; les autres sont utilisées.</li>
+    <li>Réponses gardées 6 heures en mémoire : une relance ne refait que les appels manquants.</li>
+  </ul>
+
+  <h3>Tâches courantes</h3>
+  <table>
+    <tr><th style="width: 34%">Tâche</th><th>Comment</th></tr>
+    <tr><td>Lancer les tests</td><td>Dans un terminal ouvert dans le dossier du projet : <code>python -m pip install pytest</code> puis <code>python -m pytest</code>. 19 tests, sans appel à MSCI, en quelques secondes.</td></tr>
+    <tr><td>Changer le port (8765)</td><td>Ajouter <code>PORT=8800</code> dans <code>.env</code>. Si le port est pris, l'application essaie automatiquement les 9 suivants.</td></tr>
+    <tr><td>Limiter les produits Fonds</td><td><code>MSCI_FUND_PRODUCTS=Nom exact du produit</code> dans <code>.env</code> (plusieurs noms séparés par <code>;</code>). Par défaut, tous les produits Fonds du compte sont utilisés.</td></tr>
+    <tr><td>Mettre à jour les bibliothèques</td><td>Les bibliothèques sont copiées dans <code>vendor/</code> pour fonctionner sans Internet ni pip. Pour les mettre à jour : télécharger les versions récentes avec <code>pip download --only-binary=:all: -d wheels requests openpyxl truststore</code>, décompresser chaque <code>.whl</code> (un zip) dans <code>vendor/</code>, puis lancer les tests.</td></tr>
+    <tr><td>Version de Python téléchargée</td><td>Ligne <code>set "PY_VERSION=3.12.10"</code> en haut de <code>lancer.bat</code>.</td></tr>
+    <tr><td>Données fictives au démarrage</td><td><code>lancer.bat --demo</code>, ou <code>MSCI_DEMO=1</code> dans <code>.env</code>.</td></tr>
+  </table>
+
+  <h3>Sécurité</h3>
+  <ul>
+    <li>Le fichier <code>.env</code> n'est jamais envoyé sur GitHub : il est exclu par <code>.gitignore</code>. Ne jamais y mettre les identifiants de quelqu'un d'autre.</li>
+    <li>L'application n'est accessible que depuis le poste qui la lance. Elle n'écrit ni le secret ni le jeton MSCI dans les fichiers de diagnostic.</li>
+    <li>Les fichiers produits contiennent des données de portefeuille et des données MSCI sous licence : respecter les règles de diffusion de l'entreprise et du contrat MSCI.</li>
+  </ul>
+
+  <h3>Documentation de référence</h3>
+  <ul>
+    <li><em>ESG Data API V4 Documentation (juillet 2026)</em>, à la racine du projet : tous les points d'accès MSCI, avec les pages citées dans le code.</li>
+    <li><em>MSCI ESG &amp; Climate Historical Data API Catalog</em> : la liste des codes de données, avec définitions et unités.</li>
+    <li>Portail MSCI : <code>developer.msci.com/apis/esg-data-api</code></li>
+  </ul>
+</section>
+
+<!-- ================================================================ 9 -->
+<section>
+  <h2><span class="num">9</span>Glossaire</h2>
+  <table>
+    <tr><th style="width: 26%">Terme</th><th>Définition</th></tr>
+    <tr><td>ISIN</td><td>Code international à 12 caractères qui identifie un titre (ex. <code>GB00BTK05J60</code>). Le dernier chiffre est une clé de contrôle, ce qui permet de repérer les fautes de frappe.</td></tr>
+    <tr><td>API</td><td>Porte d'accès par laquelle un programme interroge MSCI, sans passer par un site web.</td></tr>
+    <tr><td>API V4, V3</td><td>Deux versions de l'API MSCI ESG. La V4 suit les nouveaux produits MSCI ; la V3 suit les droits d'ESG Manager. Elles peuvent donner accès à des données différentes.</td></tr>
+    <tr><td>Historique</td><td>Partie de l'API qui conserve les valeurs passées ; l'application en reprend la plus récente.</td></tr>
+    <tr><td>Client ID, Client secret</td><td>Identifiant et mot de passe de l'application auprès de MSCI, fournis par le MSCI Customer Center.</td></tr>
+    <tr><td>Jeton (token)</td><td>Autorisation temporaire (24 h) que MSCI délivre en échange des identifiants. L'application la gère seule.</td></tr>
+    <tr><td>Émetteur</td><td>La société ou l'entité qui émet un titre. Les données ESG sont le plus souvent attachées à l'émetteur.</td></tr>
+    <tr><td>MDSUID</td><td>Identifiant interne MSCI d'un fonds, que l'application retrouve à partir de l'ISIN de la part.</td></tr>
+    <tr><td>Cache</td><td>Mémoire temporaire des réponses MSCI, pour ne pas redemander la même chose.</td></tr>
+    <tr><td><code>.env</code></td><td>Petit fichier texte de réglages personnels (identifiants, port). Jamais partagé.</td></tr>
+    <tr><td><code>lancer.bat</code></td><td>Le fichier à double-cliquer pour démarrer l'application sous Windows.</td></tr>
+  </table>
+</section>
+
+</body>
+</html>
